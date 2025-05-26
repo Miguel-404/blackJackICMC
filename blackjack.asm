@@ -43,14 +43,14 @@ call telainicial
     loop:
         call aposta
 
-        jmp loop
+        ;jmp loop
         load r0, coins
         loadn r1, #1000
         loadn r2, #0
         cmp r0, r1
-        ceq tela_ganhou
+        ;ceq tela_ganhou
         cmp r0, r2
-        ceq tela_perdeu
+        ;ceq tela_perdeu
         halt
 
 input_:     ;retorna r2
@@ -121,7 +121,6 @@ push r4
         loadn r3, #13   ;13=enter
         cmp r2, r3
         jne aposta_confirma
-
     load r0, coins
     cmp r1, r0
     jgr aposta_reset
@@ -181,6 +180,53 @@ push r2
             inc r0
             cmp r0, r2
             jne apagatela_loop
+pop r2
+pop r1
+pop r0
+rts
+
+imprimecarta:
+push r0
+push r1
+push r2
+push r4
+push r5
+push r6
+push r7
+    loadn r0, #7;pos
+    loadn r1, #8;linha
+    loadn r2, #4;largstring
+    loadn r5, #40
+    mul r5, r1, r5
+    add r6, r0, r5
+    mov r7, r1
+    imprimecarta_loop:
+        loadn r5, #'#'
+        outchar r5, r6
+        inc r6
+
+        loadn r5, #40
+        mul r5, r7, r5
+        add r5, r5, r2
+        add r5, r5, r0
+        cmp r6, r5
+        jle imprimecarta_loop
+        loadn r5, #4
+        sub r6, r6, r5     ;pos-=4
+
+        inc r7              ;linha++
+        loadn r5, #40
+        mul r5, r7, r5      ;r5=linha*40
+        add r6, r0, r5      ;pos+=r5
+
+        loadn r5, #6
+        add r5, r1, r5
+        cmp r7, r5
+        jle imprimecarta_loop
+pop r7
+pop r6
+pop r5
+pop r4
 pop r2
 pop r1
 pop r0
