@@ -193,8 +193,6 @@ push r4
 push r5
 push r6
 push r7
-    loadn r0, #7;pos
-    loadn r1, #8;linha
     loadn r2, #4;largstring
     loadn r5, #40
     mul r5, r1, r5
