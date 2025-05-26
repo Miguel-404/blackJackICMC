@@ -44,6 +44,13 @@ call telainicial
         call aposta
 
         jmp loop
+        load r0, coins
+        loadn r1, #1000
+        loadn r2, #0
+        cmp r0, r1
+        ceq tela_ganhou
+        cmp r0, r2
+        ceq tela_perdeu
         halt
 
 input_:     ;retorna r2
@@ -81,6 +88,9 @@ push r4
         cmp r4, r3
         jle aposta_confirma
         call input_;=inchar r2
+        loadn r3, #27   ;13=enter
+        cmp r2, r3
+        jeq aposta_reset
         loadn r3, #'9'
         cmp r2, r3
         jgr aposta_input
@@ -104,9 +114,14 @@ push r4
     
     aposta_confirma:
         inchar r2
+        loadn r3, #27   ;13=enter
+        cmp r2, r3
+        jeq aposta_reset
+        inchar r2
         loadn r3, #13   ;13=enter
         cmp r2, r3
         jne aposta_confirma
+
     load r0, coins
     cmp r1, r0
     jgr aposta_reset
