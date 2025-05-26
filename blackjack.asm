@@ -42,19 +42,18 @@ call telainicial
         jne main_input
     loop:
         call telabet
-        
         loadn r0, #7
         load r1, coins
         call printnum
 
         loadn r0, #379
-        call inputnum ;retorna r1
+        call aposta
         load r0, coins
-        sub r0, r0, r1
-        store coins, r0
+        sub r1, r0, r1
+        store coins, r1
 
         loadn r0, #7
-        load r1, coins
+        ;load r1, coins
         call printnum
 
         jmp loop
@@ -76,7 +75,7 @@ pop fr
 pop r1
 rts
 
-inputnum: ;retorna r1
+aposta: ;retorna r1
 push fr
 push r0 ;posicao do numero
 push r2 
@@ -84,22 +83,22 @@ push r3
 push r4 
     loadn r4, #100    ; casa decimal
     loadn r1, #0      ; valor da aposta
-    inputnum_input:
+    aposta_input:
         loadn r3, #1
         cmp r4, r3
-        jle inputnum_confirma
+        jle aposta_confirma
         call input_;=inchar r2
         loadn r3, #'9'
         cmp r2, r3
-        jgr inputnum_input
+        jgr aposta_input
         loadn r3, #'0'
         cmp r2, r3
-        jle inputnum_input
+        jle aposta_input
     outchar r2, r0
     
     sub r2, r2, r3  ;r2=r2-'0'  ; converte o caracter para numero
     mul r2, r4, r2  ;r2=r2*casa decimal atual
-    add r1, r1, r2  ;numero=numero+r2
+    add r1, r1, r2  ;aposta=aposta+r2
     
     loadn r3, #10   ;
     div r4, r4, r3  ;proxima casa decimal
@@ -108,13 +107,13 @@ push r4
 
     loadn r3, #1
     cmp r4, r3
-    jmp inputnum_input
+    jmp aposta_input
     
-    inputnum_confirma:
+    aposta_confirma:
         inchar r2
         loadn r3, #13   ;13=enter
         cmp r2, r3
-        jne inputnum_confirma
+        jne aposta_confirma
 pop r4
 pop r3
 pop r2
