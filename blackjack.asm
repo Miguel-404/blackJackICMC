@@ -173,49 +173,67 @@ telainicial:
 push r0
 push r1
 push r2
-    loadn r0, #160
+    loadn r2, #40
+    loadn r0, #4    ;numero da linha
+    mul r0, r0, r2
     loadn r1, #telainicial1
-    loadn r2, #0
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #320
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #8    ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #640
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #16   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #680
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #17   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #720
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #18   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #760
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #19   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #800
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #20   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #840
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #21   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #1000
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #25   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
 pop r0
 pop r1
@@ -226,34 +244,46 @@ telabet:
 push r0
 push r1
 push r2
-    loadn r0, #0
+    loadn r2, #40
+    loadn r0, #0    ;numero da linha
+    mul r0, r0, r2
     loadn r1, #telabet1
-    loadn r2, #0
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #160
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #1    ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #280
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #7    ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #320
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #8    ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #360
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #9    ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
-    loadn r0, #400
-    loadn r2, #41
+    loadn r2, #40
+    loadn r0, #10   ;numero da linha
+    mul r0, r0, r2
     add r1, r1, r2
-    loadn r2, #0
+    inc r1
+    loadn r2, #0    ;cor
     call ImprimeStr
 pop r2
 pop r1
