@@ -114,7 +114,7 @@ push r4
     
     aposta_confirma:
         inchar r2
-        loadn r3, #27   ;13=enter
+        loadn r3, #27   ;27=esc
         cmp r2, r3
         jeq aposta_reset
         inchar r2
