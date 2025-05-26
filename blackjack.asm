@@ -82,13 +82,13 @@ push r4
     call printnum
     loadn r4, #100    ; casa decimal
     loadn r1, #0
-    loadn r0, #379
+    loadn r0, #379    ;posicao na tela
     aposta_input:
         loadn r3, #1
         cmp r4, r3
         jle aposta_confirma
         call input_;=inchar r2
-        loadn r3, #27   ;13=enter
+        loadn r3, #27   ;27=esc
         cmp r2, r3
         jeq aposta_reset
         loadn r3, #'9'
