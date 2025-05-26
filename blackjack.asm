@@ -25,9 +25,9 @@ telabet1:
 string  "MOEDAS:                                 "
 string  "               SUA APOSTA:              "
 string  "             ______________             "
-string  "            |              |            "
-string  "            |      ---     |            "
-string  "            |______________|            "
+string  "            |              *            "
+string  "            |      ---     *            "
+string  "            |______________*            "
 
 coins:
 var #1
@@ -41,20 +41,7 @@ call telainicial
         ceq apagatela
         jne main_input
     loop:
-        call telabet
-        loadn r0, #7
-        load r1, coins
-        call printnum
-
-        loadn r0, #379
         call aposta
-        load r0, coins
-        sub r1, r0, r1
-        store coins, r1
-
-        loadn r0, #7
-        ;load r1, coins
-        call printnum
 
         jmp loop
         halt
@@ -80,9 +67,15 @@ push fr
 push r0 ;posicao do numero
 push r2 
 push r3 
-push r4 
+push r4
+    aposta_reset:
+    call telabet
+    loadn r0, #7
+    load r1, coins
+    call printnum
     loadn r4, #100    ; casa decimal
-    loadn r1, #0      ; valor da aposta
+    loadn r1, #0
+    loadn r0, #379
     aposta_input:
         loadn r3, #1
         cmp r4, r3
@@ -114,6 +107,15 @@ push r4
         loadn r3, #13   ;13=enter
         cmp r2, r3
         jne aposta_confirma
+    load r0, coins
+    cmp r1, r0
+    jgr aposta_reset
+    sub r1, r0, r1
+    store coins, r1
+
+    loadn r0, #7
+    load r1, coins
+    call printnum
 pop r4
 pop r3
 pop r2
