@@ -1,36 +1,5 @@
 jmp main
 
-telainicial1:
-string "                BLACKJACK               "
-
-;SPLASH:
-string "         CASSINO 100% LEGALIZADO        "
-
-
-
-
-string "         A###  J###  Q###  K###         "
-string "         wx##  []##  @^##  <>##         "
-string "         yz##  {}##  `~##  {}##         "
-string "         ##wx  ##[]  ##@^  ##<>         "
-string "         ##yz  ##{}  ##`~  ##{}         "
-string "         ###A  ###J  ###Q  ###K         "
-
-
-string "       PRESSIONE ESPACO PARA JOGAR     "
-
-
-
-telabet1:
-string  "MOEDAS:                                 "
-string  "               SUA APOSTA:              "
-string  "             ______________             "
-string  "            |              *            "
-string  "            |      ---     *            "
-string  "            |______________*            "
-
-
-
 telajogo:
 string "                  MESA:                 "
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
@@ -191,7 +160,6 @@ maiscarta3:
     ;jeq end
     loadn r1, #'s'
     cmp r0, r1
-    ceq carta3
     jne maiscarta3
 maiscarta4:    
     inchar r0
@@ -200,7 +168,6 @@ maiscarta4:
     ;jeq end
     loadn r1, #'s'
     cmp r0, r1
-    ceq carta4
     jne maiscarta4
 maiscarta5:
     inchar r0
@@ -209,7 +176,6 @@ maiscarta5:
     ;jeq end
     loadn r1, #'s'
     cmp r0, r1
-    ceq carta5
     jne maiscarta5
 
 pop r4
@@ -266,81 +232,70 @@ pop r2
 pop r1
 pop r0
 rts
-
+carta:
+string "####"
+string "####"
+string "####"
+string "####"
+string "####"
+string "####"
 imprimecarta:
 push r0 ;coluna
 push r1 ;linha
 push r2
-push r4
-push r5
-push r6
-push r7
-    loadn r2, #4 ;largstring
-    loadn r5, #40
-    mul r5, r1, r5
-    add r6, r0, r5
-    mov r7, r1
-    imprimecarta_loop:
-        loadn r5, #'#'
-        outchar r5, r6
-        inc r6
-
-        loadn r5, #40
-        mul r5, r7, r5
-        add r5, r5, r2
-        add r5, r5, r0
-        cmp r6, r5
-        jle imprimecarta_loop
-        loadn r5, #4
-        sub r6, r6, r5     ;pos-=4
-
-        inc r7              ;linha++
-        loadn r5, #40
-        mul r5, r7, r5      ;r5=linha*40
-        add r6, r0, r5      ;pos+=r5
-
-        loadn r5, #6
-        add r5, r1, r5
-        cmp r7, r5
-        jle imprimecarta_loop
-pop r7
-pop r6
-pop r5
-pop r4
+    loadn r2, #40
+    mul r2, r1, r2    ; comeco da linha
+    add r0, r0, r2    ; comeco da linha+coluna
+    loadn r1, #carta
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r0, r0, r2
+    loadn r2, #5
+    add r1, r1, r2
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r0, r0, r2
+    loadn r2, #5
+    add r1, r1, r2
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r0, r0, r2
+    loadn r2, #5
+    add r1, r1, r2
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r0, r0, r2
+    loadn r2, #5
+    add r1, r1, r2
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r0, r0, r2
+    loadn r2, #5
+    add r1, r1, r2
+    loadn r2, #0
+    call ImprimeStr
 pop r2
 pop r1
 pop r0
 rts
+telainicial1:
+string "                BLACKJACK               "
+;SPLASH:
+string "         CASSINO 100% LEGALIZADO        "
 
-carta3:
-    push r0
-    push r1
-    loadn r0, #15
-    loadn r1, #20
-    call imprimecarta
-    pop r1
-    pop r0
-    rts
-carta4:
-    push r0
-    push r1
-    loadn r0, #20
-    loadn r1, #20
-    call imprimecarta
-    pop r1
-    pop r0
-    rts
-carta5:
-    push r0
-    push r1
-    loadn r0, #25
-    loadn r1, #20
-    call imprimecarta
-    pop r1
-    pop r0
-    rts
+string "         A###  J###  Q###  K###         "
+string "         wx##  []##  @^##  <>##         "
+string "         yz##  {}##  `~##  {}##         "
+string "         ##wx  ##[]  ##@^  ##<>         "
+string "         ##yz  ##{}  ##`~  ##{}         "
+string "         ###A  ###J  ###Q  ###K         "
 
-
+string "       PRESSIONE ESPACO PARA JOGAR      "
 telainicial:
 push r0
 push r1
@@ -411,7 +366,13 @@ pop r0
 pop r1
 pop r2
 rts
-
+telabet1:
+string  "MOEDAS:                                 "
+string  "               SUA APOSTA:              "
+string  "             ______________             "
+string  "            |              *            "
+string  "            |      ---     *            "
+string  "            |______________*            "
 telabet:
 push r0
 push r1
