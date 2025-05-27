@@ -29,6 +29,12 @@ string  "            |              *            "
 string  "            |      ---     *            "
 string  "            |______________*            "
 
+
+
+
+
+
+
 coins:
 var #1
 static coins + #0, #100
@@ -41,11 +47,9 @@ call telainicial
         ceq apagatela
         jne main_input
     loop:
-        call jogo
-
+        call aposta
+       
         ;jmp loop
-        call imprimecarta
-
         load r0, coins
         loadn r1, #1000
         loadn r2, #0
@@ -71,7 +75,7 @@ pop fr
 pop r1
 rts
 
-jogo: ;retorna r1
+aposta: ;retorna r1
 push fr
 push r0 ;posicao do numero
 push r2 
@@ -112,7 +116,7 @@ push r4
 
     loadn r3, #1
     cmp r4, r3
-    jle aposta_input
+    jmp aposta_input
     
     aposta_confirma:
         inchar r2
@@ -132,6 +136,24 @@ push r4
     loadn r0, #7
     load r1, coins
     call printnum
+call apagatela
+
+loadn r0, #5
+loadn r1, #0
+call imprimecarta
+loadn r0, #10
+loadn r1, #0
+call imprimecarta
+loadn r0, #5
+loadn r1, #20
+call imprimecarta
+loadn r0, #10
+loadn r1, #20
+call imprimecarta
+
+
+
+
 pop r4
 pop r3
 pop r2
@@ -188,16 +210,14 @@ pop r0
 rts
 
 imprimecarta:
-push r0
-push r1
+push r0 ;coluna
+push r1 ;linha
 push r2
 push r4
 push r5
 push r6
 push r7
-    loadn r0, #7;pos
-    loadn r1, #8;linha
-    loadn r2, #4;largstring
+    loadn r2, #4 ;largstring
     loadn r5, #40
     mul r5, r1, r5
     add r6, r0, r5
