@@ -2,26 +2,28 @@ jmp main
 
 telajogo:
 string "                  MESA:                 "
+
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
+Msn1:
+string "       QUER MAIS UMA CARTA? (S/N)       "
+
 string "                 PLAYER:                "
 
-Msn1:
-string "       QUER MAIS UMA CARTA? (s/n)       "
 
 
 coins:
 var #1
-static coins + #0, #100
+static coins +#0, #100
 main:
 call telainicial
+    loadn r1, #' '  ;tecla para mudar a tela
     main_input:
-        call input_     ;inchar r2
-        loadn r1, #' '  ;tecla para mudar a tela
+        inchar r2
         cmp r2, r1
-        ceq apagatela
         jne main_input
+        call apagatela
     loop:
-        call aposta
+        call jogo
        
         ;jmp loop
         load r0, coins
@@ -32,6 +34,7 @@ call telainicial
         cmp r0, r2
         ;ceq tela_perdeu
         halt
+
 
 input_:     ;retorna r2
 push r1
@@ -49,13 +52,14 @@ pop fr
 pop r1
 rts
 
-aposta: ;retorna r1
+jogo:
 push fr
 push r0 ;posicao do numero
+push r1
 push r2 
 push r3 
 push r4
-    aposta_reset:
+    aposta:
     call telabet
     loadn r0, #7
     load r1, coins
@@ -70,7 +74,7 @@ push r4
         call input_;=inchar r2
         loadn r3, #27   ;27=esc
         cmp r2, r3
-        jeq aposta_reset
+        jeq aposta
         loadn r3, #'9'
         cmp r2, r3
         jgr aposta_input
@@ -96,20 +100,16 @@ push r4
         inchar r2
         loadn r3, #27   ;27=esc
         cmp r2, r3
-        jeq aposta_reset
+        jeq aposta
         inchar r2
         loadn r3, #13   ;13=enter
         cmp r2, r3
         jne aposta_confirma
     load r0, coins
     cmp r1, r0
-    jgr aposta_reset
+    jgr aposta
     sub r1, r0, r1
     store coins, r1
-
-    loadn r0, #7
-    load r1, coins
-    call printnum
 
 call apagatela
 
@@ -143,9 +143,6 @@ call imprimecarta
 loadn r0, #5
 loadn r1, #20
 call imprimecarta
-loadn r0, #10
-loadn r1, #20
-call imprimecarta
 
 loadn r2, #40
 loadn r0, #17
@@ -153,47 +150,32 @@ mul r0, r0, r2
 loadn r1, #Msn1
 loadn r2, #0
 call ImprimeStr
-maiscarta3:
-    inchar r3
-    loadn r4, #'n'
-    cmp r3, r4
-    ;jeq end
-    cmp r3, r5
-    loadn r5, #'s'
-    loadn r0, #15
-    loadn r1, #20
-    ceq imprimecarta
-    jne maiscarta3
-maiscarta4:    
-    call delay
-    maiscarta4_loop:
-        inchar r3
-        loadn r4, #'n'
-        cmp r3, r4
-        ;jeq end
-        loadn r5, #'s'
-        loadn r0, #20
-        loadn r1, #20
-        cmp r3, r5
-        ceq imprimecarta
-        jne maiscarta4_loop
-maiscarta5:
-    call delay
-        maiscarta5_loop:
-        inchar r3
-        loadn r4, #'n'
-        cmp r3, r4
-        ;jeq end
-        loadn r5, #'s'
-        loadn r0, #25
-        loadn r1, #20
-        cmp r3, r5
-        ceq imprimecarta
-        jne maiscarta5_loop
 
+loadn r1, #20
+loadn r0, #5
+loadn r4, #2
+maiscarta:
+    loadn r2, #5    ;maximo de cartas
+    cmp r4, r2
+    jgr maiscarta_end
+    loadn r2, #5
+    add r0, r0, r2
+    call imprimecarta
+    inc r4
+    maiscarta_input:
+        call input_
+        loadn r3, #'n'
+        cmp r2, r3
+        ;jeq maiscarta_end
+        loadn r3, #'s'
+        cmp r2, r3
+        jeq maiscarta
+        jmp maiscarta_input
+        maiscarta_end:
 pop r4
 pop r3
 pop r2
+pop r1
 pop r0
 pop fr
 rts
@@ -247,16 +229,17 @@ pop r0
 rts
 
 carta:
-string "####"
-string "####"
-string "####"
-string "####"
-string "####"
-string "####"
+string "XX##"
+string "NN##"
+string "NN##"
+string "##NN"
+string "##NN"
+string "##XX"
 imprimecarta:
-push r0 ;coluna
-push r1 ;linha
-push r2
+ push r0 ;coluna
+ push r1 ;linha
+ push r2
+ push r3
     loadn r2, #40
     mul r2, r1, r2    ; comeco da linha
     add r0, r0, r2    ; comeco da linha+coluna
@@ -293,38 +276,84 @@ push r2
     add r1, r1, r2
     loadn r2, #0
     call ImprimeStr
+pop r3
 pop r2
 pop r1
 pop r0
 rts
 
-valore: string "A23456789:JQK"
-imprimeval:
-push r0    ;pos
-push r1
-push r2    ;val
-    loadn r2, #4
-    add r0, r0, r2
-    loadn r2, #'#'
-    outchar r2, r0
-    dec r0
-    outchar r2, r0
-    dec r0
-    dec r0
+valores: string "A234567891JQK"
+viracarta:
+ push r0    ;pos
+ push r1
+ push r2    ;val
+ push r3
     loadn r1, #valores
     dec r1
     add r1, r1, r2
     loadi r1, r1
     outchar r1, r0
-    inc r0
-    loadn r2, #':'
+    loadn r2, #'1'
     cmp r1, r2
-    jne imprimeval_A9JQK
+    jne viracarta_naipe
+    inc r0
     loadn r2, #'0'
     outchar r2, r0
-    imprimeval_A9JQK:
-    loadn r2, #'#'
+    dec r0
+
+    viracarta_naipe:
+    ;naipe 1
+    loadn r2, #40
+    add r0, r0, r2
+
+    loadn r2, #40
+    add r0, r0, r2
+    inc r0
+
+    loadn r2, #40
+    add r0, r0, r2
+    dec r0
+
+    loadn r2, #40
+    add r0, r0, r2
+    inc r0
+    
+    ;naipe 2
+    loadn r2, #40
+    add r0, r0, r2
+    inc r0
+
+    loadn r2, #40
+    add r0, r0, r2
+    inc r0
+
+    loadn r2, #40
+    add r0, r0, r2
+    dec r0
+
+    loadn r2, #40
+    add r0, r0, r2
+    inc r0
+    
+    viracarta_fundo:
+    loadn r1, #valores
+    dec r1
+    add r1, r1, r2
+    loadi r1, r1
+    outchar r1, r0
+    loadn r2, #'1'
+    cmp r1, r2
+    jne viracarta_fim
+    dec r0
+    loadn r2, #'1'
     outchar r2, r0
+    inc r0
+    loadn r2, #'0'
+    outchar r2, r0
+    viracarta_fim:
+
+
+pop r3
 pop r2
 pop r1
 pop r0
@@ -429,6 +458,7 @@ pop r0
 pop r1
 pop r2
 rts
+
 telabet1:
 string  "MOEDAS:                                 "
 string  "               SUA APOSTA:              "
@@ -499,7 +529,6 @@ ImprimeStr:
 	    loadi r4, r1
 	    cmp r4, r3
 	    jeq ImprimestrSai
-	    add r4, r2, r4
 	    outchar r4, r0
 	    inc r0
 	    inc r1
