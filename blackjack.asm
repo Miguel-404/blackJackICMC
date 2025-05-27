@@ -245,6 +245,7 @@ pop r2
 pop r1
 pop r0
 rts
+
 carta:
 string "####"
 string "####"
@@ -296,11 +297,12 @@ pop r2
 pop r1
 pop r0
 rts
+
 valore: string "A23456789:JQK"
 imprimeval:
-push r0
+push r0    ;pos
 push r1
-push r2
+push r2    ;val
     loadn r2, #4
     add r0, r0, r2
     loadn r2, #'#'
@@ -314,16 +316,19 @@ push r2
     add r1, r1, r2
     loadi r1, r1
     outchar r1, r0
+    inc r0
     loadn r2, #':'
     cmp r1, r2
-    jne imprimeval_
-    call printnum
-    imprimeval_
-    inc r0
-    print #
+    jne imprimeval_A9JQK
+    loadn r2, #'0'
+    outchar r2, r0
+    imprimeval_A9JQK:
+    loadn r2, #'#'
+    outchar r2, r0
 pop r2
 pop r1
 pop r0
+rts
 
 delay:
     push r0
