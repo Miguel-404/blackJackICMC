@@ -154,29 +154,42 @@ loadn r1, #Msn1
 loadn r2, #0
 call ImprimeStr
 maiscarta3:
-    inchar r0
-    loadn r2, #'n'
-    cmp r0, r2
+    inchar r3
+    loadn r4, #'n'
+    cmp r3, r4
     ;jeq end
-    loadn r1, #'s'
-    cmp r0, r1
+    cmp r3, r5
+    loadn r5, #'s'
+    loadn r0, #15
+    loadn r1, #20
+    ceq imprimecarta
     jne maiscarta3
 maiscarta4:    
-    inchar r0
-    loadn r2, #'n'
-    cmp r0, r2
-    ;jeq end
-    loadn r1, #'s'
-    cmp r0, r1
-    jne maiscarta4
+    call delay
+    maiscarta4_loop:
+        inchar r3
+        loadn r4, #'n'
+        cmp r3, r4
+        ;jeq end
+        loadn r5, #'s'
+        loadn r0, #20
+        loadn r1, #20
+        cmp r3, r5
+        ceq imprimecarta
+        jne maiscarta4_loop
 maiscarta5:
-    inchar r0
-    loadn r2, #'n'
-    cmp r0, r2
-    ;jeq end
-    loadn r1, #'s'
-    cmp r0, r1
-    jne maiscarta5
+    call delay
+        maiscarta5_loop:
+        inchar r3
+        loadn r4, #'n'
+        cmp r3, r4
+        ;jeq end
+        loadn r5, #'s'
+        loadn r0, #25
+        loadn r1, #20
+        cmp r3, r5
+        ceq imprimecarta
+        jne maiscarta5_loop
 
 pop r4
 pop r3
@@ -283,6 +296,25 @@ pop r2
 pop r1
 pop r0
 rts
+
+
+
+delay:
+    push r0
+    push r1
+    loadn r0, #64000
+    loadn r1, #0
+        delay_loop:
+        inc r1
+        cmp r1, r0
+        jne delay_loop
+    pop r1
+    pop r0
+    rts
+
+
+
+
 telainicial1:
 string "                BLACKJACK               "
 ;SPLASH:
