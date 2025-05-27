@@ -3,18 +3,18 @@ jmp main
 telainicial1:
 string "                BLACKJACK               "
 
-
-string "                 I C M C                "
-
-
+;SPLASH:
+string "         CASSINO 100% LEGALIZADO        "
 
 
-string "         W###  X###  Z###  Y###         "
+
+
+string "         A###  J###  Q###  K###         "
 string "         wx##  []##  @^##  <>##         "
 string "         yz##  {}##  `~##  {}##         "
 string "         ##wx  ##[]  ##@^  ##<>         "
 string "         ##yz  ##{}  ##`~  ##{}         "
-string "         ###W  ###X  ###Z  ###Y         "
+string "         ###A  ###J  ###Q  ###K         "
 
 
 string "       PRESSIONE ESPACO PARA JOGAR     "
@@ -31,8 +31,13 @@ string  "            |______________*            "
 
 
 
+telajogo:
+string "                  MESA:                 "
+string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
+string "                 PLAYER:                "
 
-
+Msn1:
+string "       QUER MAIS UMA CARTA? (s/n)       "
 
 
 coins:
@@ -136,13 +141,35 @@ push r4
     loadn r0, #7
     load r1, coins
     call printnum
+
 call apagatela
 
+loadn r2, #40
+loadn r0, #1
+mul r0, r0, r2
+loadn r1, #telajogo
+loadn r2, #0
+call ImprimeStr
+loadn r2, #40
+loadn r0, #15
+mul r0, r0, r2
+add r1, r1, r2
+inc r1
+loadn r2, #0
+call ImprimeStr
+loadn r2, #40
+loadn r0, #28
+mul r0, r0, r2
+add r1, r1, r2
+inc r1
+loadn r2, #0
+call ImprimeStr
+
 loadn r0, #5
-loadn r1, #0
+loadn r1, #4
 call imprimecarta
 loadn r0, #10
-loadn r1, #0
+loadn r1, #4
 call imprimecarta
 loadn r0, #5
 loadn r1, #20
@@ -151,8 +178,39 @@ loadn r0, #10
 loadn r1, #20
 call imprimecarta
 
-
-
+loadn r2, #40
+loadn r0, #17
+mul r0, r0, r2
+loadn r1, #Msn1
+loadn r2, #0
+call ImprimeStr
+maiscarta3:
+    inchar r0
+    loadn r2, #'n'
+    cmp r0, r2
+    ;jeq end
+    loadn r1, #'s'
+    cmp r0, r1
+    ceq carta3
+    jne maiscarta3
+maiscarta4:    
+    inchar r0
+    loadn r2, #'n'
+    cmp r0, r2
+    ;jeq end
+    loadn r1, #'s'
+    cmp r0, r1
+    ceq carta4
+    jne maiscarta4
+maiscarta5:
+    inchar r0
+    loadn r2, #'n'
+    cmp r0, r2
+    ;jeq end
+    loadn r1, #'s'
+    cmp r0, r1
+    ceq carta5
+    jne maiscarta5
 
 pop r4
 pop r3
@@ -253,6 +311,35 @@ pop r2
 pop r1
 pop r0
 rts
+
+carta3:
+    push r0
+    push r1
+    loadn r0, #15
+    loadn r1, #20
+    call imprimecarta
+    pop r1
+    pop r0
+    rts
+carta4:
+    push r0
+    push r1
+    loadn r0, #20
+    loadn r1, #20
+    call imprimecarta
+    pop r1
+    pop r0
+    rts
+carta5:
+    push r0
+    push r1
+    loadn r0, #25
+    loadn r1, #20
+    call imprimecarta
+    pop r1
+    pop r0
+    rts
+
 
 telainicial:
 push r0
