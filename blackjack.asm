@@ -296,8 +296,34 @@ pop r2
 pop r1
 pop r0
 rts
-
-
+valore: string "A23456789:JQK"
+imprimeval:
+push r0
+push r1
+push r2
+    loadn r2, #4
+    add r0, r0, r2
+    loadn r2, #'#'
+    outchar r2, r0
+    dec r0
+    outchar r2, r0
+    dec r0
+    dec r0
+    loadn r1, #valores
+    dec r1
+    add r1, r1, r2
+    loadi r1, r1
+    outchar r1, r0
+    loadn r2, #':'
+    cmp r1, r2
+    jne imprimeval_
+    call printnum
+    imprimeval_
+    inc r0
+    print #
+pop r2
+pop r1
+pop r0
 
 delay:
     push r0
