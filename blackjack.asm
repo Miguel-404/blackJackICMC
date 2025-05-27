@@ -41,9 +41,11 @@ call telainicial
         ceq apagatela
         jne main_input
     loop:
-        call aposta
+        call jogo
 
         ;jmp loop
+        call imprimecarta
+
         load r0, coins
         loadn r1, #1000
         loadn r2, #0
@@ -69,7 +71,7 @@ pop fr
 pop r1
 rts
 
-aposta: ;retorna r1
+jogo: ;retorna r1
 push fr
 push r0 ;posicao do numero
 push r2 
@@ -110,7 +112,7 @@ push r4
 
     loadn r3, #1
     cmp r4, r3
-    jmp aposta_input
+    jle aposta_input
     
     aposta_confirma:
         inchar r2
@@ -193,6 +195,8 @@ push r4
 push r5
 push r6
 push r7
+    loadn r0, #7;pos
+    loadn r1, #8;linha
     loadn r2, #4;largstring
     loadn r5, #40
     mul r5, r1, r5
