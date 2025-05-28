@@ -1,11 +1,12 @@
 jmp main
 
 telajogo:
-string "                  MESA:                 "
+string "                 MESA:                  "
 
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
-string "                 PLAYER:                "
-
+string "                PLAYER:                 "
+steve:
+string "                 STEVE:                 "
 
 
 Msn1:
@@ -564,6 +565,8 @@ chickenJockey:
 push r0
 push r1
 push r2
+push r3
+push r4
     loadn r2, #40
     loadn r0, #4    ;numero da linha
     mul r0, r0, r2
@@ -572,6 +575,20 @@ push r2
     loadn r1, #jackblack
     loadn r2, #0    ;cor
     call ImprimeStr
+    loadn r1, #telajogo
+    loadn r2, #82
+    add r1, r1, r2
+    loadn r2, #steve
+    loadn r4, #'\0'
+    chickenJockey_loop:
+        loadi r3, r2
+        storei r1, r3
+        inc r1
+        inc r2
+        cmp r3, r4
+        jne chickenJockey_loop
+pop r4
+pop r3
 pop r2
 pop r1
 pop r0
