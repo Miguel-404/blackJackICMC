@@ -11,6 +11,8 @@ string "                 PLAYER:                "
 Msn1:
 
 string "       QUER MAIS UMA CARTA? (S/N)       "
+strapaga:
+string "                                        "
 
 
 coins:
@@ -165,10 +167,7 @@ call random_num          ;calcula soma da mesa
 store soma_mesa, r3
 
 call random_num
-mov r2, r3
-call random_num     ;calcula soma jogador
-add r3, r2, r3
-store soma, r3
+store soma, r3      ;calcula soma jogador
 
 loadn r0, #63
 load r1, soma_mesa
@@ -200,8 +199,8 @@ loadn r4, #1
 maiscarta:
     load r5, soma
     call random_num         ;retorna r3 com valor aleatorio
-    add r3, r3, r5
-    store soma, r3
+    add r5, r3, r5
+    store soma, r5
     push r0
     loadn r0, #1144
     load r1, soma
@@ -215,6 +214,10 @@ maiscarta:
     loadn r2, #5    ;maximo de cartas
     cmp r4, r2
     jeg maiscarta_end
+    loadn r6, #21
+    cmp r5, r6
+    jeg maiscarta_end
+
     maiscarta_input:
         call input_
         loadn r3, #'n'
@@ -225,12 +228,24 @@ maiscarta:
         jeq maiscarta
         jmp maiscarta_input
         maiscarta_end:
+            loadn r5, #21
+            load r3, soma
+            cmp r3, r5
+            jgr round_fim
         
 
 
 
 
 gameplay_mesa:          ;após jogador
+        loadn r2, #40
+        loadn r0, #17
+        mul r0, r0, r2
+        loadn r1, #strapaga
+        loadn r2, #0
+        call ImprimeStr
+        loadn r0, #2000000000
+        call delay
         load r2, soma_mesa
         call random_num
         add r3, r2, r3
@@ -247,7 +262,7 @@ gameplay_mesa:          ;após jogador
         call delay
         loadn r2, #15
         cmp r1, r2
-        ;jgr ....
+        jgr round_fim
     
     mesacarta3:
         call random_num
@@ -265,7 +280,7 @@ gameplay_mesa:          ;após jogador
         call delay
         load r1, soma_mesa
         cmp r1, r2
-        ;jgr ......
+        jgr round_fim
 
     mesacarta4:
         call random_num
@@ -282,8 +297,8 @@ gameplay_mesa:          ;após jogador
         call delay
         load r1, soma_mesa
         cmp r1, r2
-        ;jgr......
-    
+        jgr round_fim
+
     mesacarta5:
         call random_num
         add r1, r1, r3
@@ -301,9 +316,10 @@ gameplay_mesa:          ;após jogador
         loadn r2, #21
         load r1, soma_mesa
         cmp r1, r2
-        ;jgr ....
+        jgr round_fim
 
-
+    round_fim:
+    halt
 
 
 
