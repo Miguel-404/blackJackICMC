@@ -17,11 +17,23 @@ static coins +#0, #100
 main:
 call telainicial
     loadn r1, #' '  ;tecla para mudar a tela
+    loadn r3, #jackblack
     main_input:
-        inchar r2
+        loadi r4, r3
+        loadn r5, #'\0'
+        cmp r5, r4
+        ceq chickenJockey
+        call input_
+        loadn r5, #32
+        sub r2, r2, r5
+        cmp r2, r4
+        inc r3
+        jeq main_input
+        loadn r3, #jackblack
         cmp r2, r1
         jne main_input
         call apagatela
+
     loop:
         call jogo
        
@@ -374,7 +386,23 @@ delay:
 
 
 
-
+chickenJockey:
+push r0
+push r1
+push r2
+    loadn r2, #40
+    loadn r0, #4    ;numero da linha
+    mul r0, r0, r2
+    loadn r2, #16
+    add r0, r0, r2
+    loadn r1, #jackblack
+    loadn r2, #0    ;cor
+    call ImprimeStr
+pop r2
+pop r1
+pop r0
+rts
+jackblack: string          "JACKBLACK"
 telainicial1:
 string "                BLACKJACK               "
 ;SPLASH:
@@ -529,6 +557,7 @@ ImprimeStr:
 	    loadi r4, r1
 	    cmp r4, r3
 	    jeq ImprimestrSai
+	    add r4, r2, r4
 	    outchar r4, r0
 	    inc r0
 	    inc r1
