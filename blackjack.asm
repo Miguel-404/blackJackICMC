@@ -27,6 +27,7 @@ call telainicial
         loadn r5, #32
         sub r2, r2, r5
         cmp r2, r4
+        add r2, r2,r5
         inc r3
         jeq main_input
         loadn r3, #jackblack
@@ -149,9 +150,6 @@ call ImprimeStr
 loadn r0, #5
 loadn r1, #4
 call imprimecarta
-loadn r0, #10
-loadn r1, #4
-call imprimecarta
 loadn r0, #5
 loadn r1, #20
 call imprimecarta
@@ -178,7 +176,7 @@ maiscarta:
         call input_
         loadn r3, #'n'
         cmp r2, r3
-        ;jeq maiscarta_end
+        jeq maiscarta_end
         loadn r3, #'s'
         cmp r2, r3
         jeq maiscarta
@@ -402,7 +400,7 @@ pop r2
 pop r1
 pop r0
 rts
-jackblack: string          "JACKBLACK"
+jackblack: string      "JACKBLACK"
 telainicial1:
 string "                BLACKJACK               "
 ;SPLASH:
