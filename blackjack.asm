@@ -4,23 +4,30 @@ telajogo:
 string "                  MESA:                 "
 
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
-Msn1:
-string "       QUER MAIS UMA CARTA? (S/N)       "
-
 string "                 PLAYER:                "
 
+
+
+Msn1:
+
+string "       QUER MAIS UMA CARTA? (S/N)       "
 
 
 coins:
 var #1
 static coins +#0, #100
+
+soma: var#1
+soma_mesa: var#1
+seed: var#1
+
 main:
 call telainicial
     loadn r1, #' '  ;tecla para mudar a tela
     loadn r3, #jackblack
     main_input:
         loadi r4, r3
-        loadn r5, #'\0'
+        loadn r5, #' '
         cmp r5, r4
         ceq chickenJockey
         call input_
@@ -51,10 +58,14 @@ call telainicial
 
 input_:     ;retorna r2
 push r1
+push r7
 push fr
     loadn r1, #255
+    loadn r7, #1
     input_esperaTecla:
         inchar r2
+        inc r7
+        store seed, r7
         cmp r2, r1
         jeq input_esperaTecla
     input_esperaSoltar:
@@ -62,6 +73,7 @@ push fr
         cmp r1, r2
         jeq input_esperaSoltar
 pop fr
+pop r7
 pop r1
 rts
 
@@ -147,6 +159,28 @@ inc r1
 loadn r2, #0
 call ImprimeStr
 
+
+
+call random_num          ;calcula soma da mesa
+store soma_mesa, r3
+
+call random_num
+mov r2, r3
+call random_num     ;calcula soma jogador
+add r3, r2, r3
+store soma, r3
+
+loadn r0, #63
+load r1, soma_mesa
+call printnum
+             ;imprime soma das cartas nem jogo
+
+loadn r0, # 1144
+load r1, soma
+call printnum
+
+
+
 loadn r0, #5
 loadn r1, #4
 call imprimecarta
@@ -161,27 +195,119 @@ loadn r1, #Msn1
 loadn r2, #0
 call ImprimeStr
 
-loadn r1, #20
 loadn r0, #5
-loadn r4, #2
+loadn r4, #1
 maiscarta:
-    loadn r2, #5    ;maximo de cartas
-    cmp r4, r2
-    jgr maiscarta_end
+    load r5, soma
+    call random_num         ;retorna r3 com valor aleatorio
+    add r3, r3, r5
+    store soma, r3
+    push r0
+    loadn r0, #1144
+    load r1, soma
+    call printnum
+    pop r0
     loadn r2, #5
+    loadn r1, #20
     add r0, r0, r2
     call imprimecarta
     inc r4
+    loadn r2, #5    ;maximo de cartas
+    cmp r4, r2
+    jeg maiscarta_end
     maiscarta_input:
         call input_
         loadn r3, #'n'
         cmp r2, r3
-        jeq maiscarta_end
+        jeq gameplay_mesa
         loadn r3, #'s'
         cmp r2, r3
         jeq maiscarta
         jmp maiscarta_input
         maiscarta_end:
+        
+
+
+
+
+gameplay_mesa:          ;após jogador
+        load r2, soma_mesa
+        call random_num
+        add r3, r2, r3
+        store soma_mesa, r3
+        loadn r0, #10
+        loadn r1, #4
+        call imprimecarta
+
+        loadn r0, #63
+        load r1, soma_mesa
+        call printnum
+
+        loadn r0, #2000000000
+        call delay
+        loadn r2, #15
+        cmp r1, r2
+        ;jgr ....
+    
+    mesacarta3:
+        call random_num
+        add r1, r1, r3
+        store soma_mesa, r1
+
+        loadn r0, #63
+        call printnum
+
+        loadn r0, #15
+        loadn r1, #4
+        call imprimecarta
+        
+        loadn r0, #2000000000
+        call delay
+        load r1, soma_mesa
+        cmp r1, r2
+        ;jgr ......
+
+    mesacarta4:
+        call random_num
+        add r1, r1, r3
+        store soma_mesa, r1
+
+        loadn r0, #63
+        call printnum
+        loadn r0, #20
+        loadn r1, #4
+        call imprimecarta
+        
+        loadn r0, #2000000000
+        call delay
+        load r1, soma_mesa
+        cmp r1, r2
+        ;jgr......
+    
+    mesacarta5:
+        call random_num
+        add r1, r1, r3
+        store soma_mesa, r1
+
+        loadn r0, #63
+        call printnum
+
+        loadn r0, #25
+        loadn r1, #4
+        call imprimecarta
+        
+        loadn r0, #2000000000
+        call delay
+        loadn r2, #21
+        load r1, soma_mesa
+        cmp r1, r2
+        ;jgr ....
+
+
+
+
+
+
 pop r4
 pop r3
 pop r2
@@ -220,6 +346,40 @@ pop r2
 pop r1
 pop r0
 rts
+
+
+random_num:
+    push r1
+    push r2
+    push r0
+    push r4  
+    push r6
+    push r7
+    load r3, seed
+    loadn r1, #17
+    loadn r0, #43
+    loadn r4, #256
+    loadn r6, #11
+    loadn r7, #1
+    mov r2, r3
+    mul r2, r2, r1
+    add r2, r2, r0
+    mod r2, r2, r4
+    store seed, r2
+    mod r2, r2, r6
+    add r2, r2, r7
+    mov r3, r2
+    pop r7
+    pop r6
+    pop r4
+    pop r0
+    pop r2
+    pop r1
+    rts
+
+
+
+
 
 apagatela:
 push r0
@@ -400,7 +560,7 @@ pop r2
 pop r1
 pop r0
 rts
-jackblack: string      "JACKBLACK"
+jackblack: string      "JACKBLACK "
 telainicial1:
 string "                BLACKJACK               "
 ;SPLASH:
