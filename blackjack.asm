@@ -1,20 +1,18 @@
 jmp main
 
+Msn1:
+string "       QUER MAIS UMA CARTA? (S/N)       "
+
 telajogo:
 string "                 MESA:                  "
-
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
 string "                PLAYER:                 "
 steve:
 string "                 STEVE:                 "
 
 
-Msn1:
-
-string "       QUER MAIS UMA CARTA? (S/N)       "
 strapaga:
 string "                                        "
-
 
 coins:
 var #1
@@ -27,20 +25,17 @@ seed: var#1
 main:
 call telainicial
     loadn r1, #' '  ;tecla para mudar a tela
-    loadn r3, #jackblack
+    loadn r3, #senha
     main_input:
         loadi r4, r3
-        loadn r5, #' '
+        loadn r5, #'\n'
         cmp r5, r4
         ceq chickenJockey
         call input_
-        loadn r5, #32
-        sub r2, r2, r5
         cmp r2, r4
-        add r2, r2,r5
         inc r3
         jeq main_input
-        loadn r3, #jackblack
+        loadn r3, #senha
         cmp r2, r1
         jne main_input
         call apagatela
@@ -87,7 +82,10 @@ push r1
 push r2 
 push r3 
 push r4
-    aposta:
+push r5
+push r6
+push r7
+aposta:
     call telabet
     loadn r0, #7
     load r1, coins
@@ -140,53 +138,59 @@ push r4
     store coins, r1
 
 call apagatela
+    loadn r2, #40
+    loadn r0, #1
+    mul r0, r0, r2
+    loadn r1, #telajogo
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #15
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #28
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
 
-loadn r2, #40
-loadn r0, #1
-mul r0, r0, r2
-loadn r1, #telajogo
-loadn r2, #0
-call ImprimeStr
-loadn r2, #40
-loadn r0, #15
-mul r0, r0, r2
-add r1, r1, r2
-inc r1
-loadn r2, #0
-call ImprimeStr
-loadn r2, #40
-loadn r0, #28
-mul r0, r0, r2
-add r1, r1, r2
-inc r1
-loadn r2, #0
-call ImprimeStr
-
-
-
-call random_num          ;calcula soma da mesa
-store soma_mesa, r3
-
-call random_num
-store soma, r3      ;calcula soma jogador
-
-loadn r0, #63
 load r1, soma_mesa
+call random_num         ;retorna r3
+add r1, r3, r1
+store soma_mesa, r1
+loadn r0, #63
 call printnum
-             ;imprime soma das cartas nem jogo
-
-loadn r0, # 1144
-load r1, soma
-call printnum
-
-
-
 loadn r0, #5
 loadn r1, #4
 call imprimecarta
+
+loadn r4, #0
+load r1, soma
+call random_num         ;retorna r3
+add r1, r3, r1
+store soma, r1
+loadn r0, #1143
+call printnum
 loadn r0, #5
 loadn r1, #20
 call imprimecarta
+inc r4
+
+load r1, soma
+call random_num         ;retorna r3
+add r1, r3, r1
+store soma, r1
+loadn r0, #1143
+call printnum
+loadn r0, #10
+loadn r1, #20
+call imprimecarta
+inc r4
 
 loadn r2, #40
 loadn r0, #17
@@ -195,136 +199,82 @@ loadn r1, #Msn1
 loadn r2, #0
 call ImprimeStr
 
-loadn r0, #5
-loadn r4, #1
+loadn r0, #10
+jmp maiscarta_loop
 maiscarta:
-    load r5, soma
-    call random_num         ;retorna r3 com valor aleatorio
-    add r5, r3, r5
-    store soma, r5
-    push r0
-    loadn r0, #1144
     load r1, soma
+    call random_num         ;retorna r3
+    add r1, r3, r1
+    store soma, r1
+    push r0
+    loadn r0, #1143
     call printnum
     pop r0
+
     loadn r2, #5
     loadn r1, #20
     add r0, r0, r2
     call imprimecarta
     inc r4
+
     loadn r2, #5    ;maximo de cartas
     cmp r4, r2
     jeg maiscarta_end
     loadn r6, #21
-    cmp r5, r6
+    load r1, soma
+    cmp r1, r6
     jeg maiscarta_end
 
-    maiscarta_input:
-        call input_
+    maiscarta_loop:
+        call input_;retorna r2
         loadn r3, #'n'
         cmp r2, r3
-        jeq gameplay_mesa
+        jeq maiscarta_end
         loadn r3, #'s'
         cmp r2, r3
         jeq maiscarta
-        jmp maiscarta_input
+        jmp maiscarta_loop
         maiscarta_end:
-            loadn r5, #21
-            load r3, soma
-            cmp r3, r5
-            jgr round_fim
-        
 
-
-
-
-gameplay_mesa:          ;após jogador
         loadn r2, #40
         loadn r0, #17
         mul r0, r0, r2
         loadn r1, #strapaga
         loadn r2, #0
         call ImprimeStr
-        loadn r0, #2000000000
-        call delay
-        load r2, soma_mesa
-        call random_num
-        add r3, r2, r3
-        store soma_mesa, r3
-        loadn r0, #10
-        loadn r1, #4
-        call imprimecarta
+           
+        loadn r5, #21
+        load r3, soma
+        cmp r3, r5
+        jeg round_fim
 
-        loadn r0, #63
+loadn r0, #5
+loadn r4, #1
+gameplay_mesa:
+        call delay
+
         load r1, soma_mesa
-        call printnum
-
-        loadn r0, #2000000000
-        call delay
-        loadn r2, #15
-        cmp r1, r2
-        jgr round_fim
-    
-    mesacarta3:
         call random_num
         add r1, r1, r3
         store soma_mesa, r1
-
+        push r0
         loadn r0, #63
         call printnum
-
-        loadn r0, #15
+        pop r0
+        loadn r2, #5
         loadn r1, #4
+        add r0, r0, r2
         call imprimecarta
-        
-        loadn r0, #2000000000
-        call delay
+        inc r4
+
         load r1, soma_mesa
-        cmp r1, r2
-        jgr round_fim
-
-    mesacarta4:
-        call random_num
-        add r1, r1, r3
-        store soma_mesa, r1
-
-        loadn r0, #63
-        call printnum
-        loadn r0, #20
-        loadn r1, #4
-        call imprimecarta
-        
-        loadn r0, #2000000000
-        call delay
-        load r1, soma_mesa
-        cmp r1, r2
-        jgr round_fim
-
-    mesacarta5:
-        call random_num
-        add r1, r1, r3
-        store soma_mesa, r1
-
-        loadn r0, #63
-        call printnum
-
-        loadn r0, #25
-        loadn r1, #4
-        call imprimecarta
-        
-        loadn r0, #2000000000
-        call delay
-        loadn r2, #21
-        load r1, soma_mesa
-        cmp r1, r2
-        jgr round_fim
-
-    round_fim:
-    halt
-
-
-
-
+        loadn r5, #15
+        cmp r1, r5
+        jle gameplay_mesa
+        round_fim:
+pop r7
+pop r6
+pop r5
 pop r4
 pop r3
 pop r2
@@ -560,7 +510,7 @@ delay:
     rts
 
 
-
+senha: string "iamsteve"
 chickenJockey:
 push r0
 push r1
