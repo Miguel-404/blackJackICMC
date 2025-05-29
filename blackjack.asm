@@ -530,7 +530,7 @@ pop r0
 rts
 
 
-senha: string "iamsteve"
+senha: string "jackblack"
 chickenJockey:
  push r0
  push r1
