@@ -563,6 +563,19 @@ pop r2
 pop r1
 pop r0
 rts
+craftmine:
+string "        ================                "
+string "        ================                "
+string "        ==##  ====  ##==                "
+string "        ==##  ====  ##==                "
+string "        ======@@@@======                "
+string "        ======@@@@======                "
+string "        ====  &&&&  ====                "
+string "        ====  &&&&  ====                "
+string "        ====        ====                "
+string "        ====        ====                "
+string "        ================                "
+string "        ================                "
 jackblack: string      "JACKBLACK "
 telainicial1:
 string "                BLACKJACK               "
