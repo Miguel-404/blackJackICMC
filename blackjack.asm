@@ -6,10 +6,9 @@ string "       QUER MAIS UMA CARTA? (S/N)       "
 telajogo:
 string "                 MESA:                  "
 string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
-string "                PLAYER:                 "
+string "               PLAYER:                  "
 steve:
-string "                 STEVE:                 "
-
+string "                STEVE:                  "
 
 strapaga:
 string "                                        "
@@ -42,14 +41,14 @@ call telainicial
 
     loop:
         call jogo
-       
+        
         ;jmp loop
         load r0, coins
         loadn r1, #1000
-        loadn r2, #0
         cmp r0, r1
         ;ceq tela_ganhou
-        cmp r0, r2
+        loadn r1, #0
+        cmp r0, r1
         ;ceq tela_perdeu
         halt
 
@@ -75,17 +74,15 @@ pop r7
 pop r1
 rts
 
+valoraposta: var #1
 jogo:
-push fr
-push r0 ;posicao do numero
-push r1
-push r2 
-push r3 
-push r4
-push r5
-push r6
-push r7
-aposta:
+ push fr
+ push r0 ;posicao do numero
+ push r1
+ push r2 
+ push r3 
+ push r4
+ aposta:
     call telabet
     loadn r0, #7
     load r1, coins
@@ -112,6 +109,7 @@ aposta:
     sub r2, r2, r3  ;r2=r2-'0'  ; converte o caracter para numero
     mul r2, r4, r2  ;r2=r2*casa decimal atual
     add r1, r1, r2  ;aposta=aposta+r2
+    store valoraposta, r1
     
     loadn r3, #10   ;
     div r4, r4, r3  ;proxima casa decimal
@@ -137,7 +135,8 @@ aposta:
     sub r1, r0, r1
     store coins, r1
 
-call apagatela
+ ;tela
+    call apagatela
     loadn r2, #40
     loadn r0, #1
     mul r0, r0, r2
@@ -159,83 +158,85 @@ call apagatela
     loadn r2, #0
     call ImprimeStr
 
-load r1, soma_mesa
-call random_num         ;retorna r3
-add r1, r3, r1
-store soma_mesa, r1
-loadn r0, #63
-call printnum
-loadn r0, #5
-loadn r1, #4
-call imprimecarta
+ ;cartas iniciais
+    load r1, soma_mesa
+    call random_num         ;retorna r3
+    add r1, r3, r1
+    store soma_mesa, r1
+    loadn r0, #63
+    call printnum
+    loadn r0, #5
+    loadn r1, #4
+    call imprimecarta
 
-loadn r4, #0
-load r1, soma
-call random_num         ;retorna r3
-add r1, r3, r1
-store soma, r1
-loadn r0, #1143
-call printnum
-loadn r0, #5
-loadn r1, #20
-call imprimecarta
-inc r4
-
-load r1, soma
-call random_num         ;retorna r3
-add r1, r3, r1
-store soma, r1
-loadn r0, #1143
-call printnum
-loadn r0, #10
-loadn r1, #20
-call imprimecarta
-inc r4
-
-loadn r2, #40
-loadn r0, #17
-mul r0, r0, r2
-loadn r1, #Msn1
-loadn r2, #0
-call ImprimeStr
-
-loadn r0, #10
-jmp maiscarta_loop
-maiscarta:
+    loadn r4, #0
     load r1, soma
     call random_num         ;retorna r3
     add r1, r3, r1
     store soma, r1
-    push r0
     loadn r0, #1143
     call printnum
-    pop r0
+    loadn r0, #5
+    loadn r1, #20
+    call imprimecarta
+    inc r4
+
+    load r1, soma
+    call random_num         ;retorna r3
+    add r1, r3, r1
+    store soma, r1
+    loadn r0, #1143
+    call printnum
+    loadn r0, #10
+    loadn r1, #20
+    call imprimecarta
+    inc r4
+
+
+ loadn r2, #40
+ loadn r0, #17
+ mul r0, r0, r2
+ loadn r1, #Msn1
+ loadn r2, #0
+ call ImprimeStr
+
+ loadn r0, #10
+ jmp maisCarta_pergunta
+
+ maiscarta:
+    load r1, soma
+    call random_num   ;retorna r3
+    add r1, r3, r1
+    store soma, r1
+    push r0 ;preserva a posicao da carta
+    loadn r0, #1143
+    call printnum
+    pop r0  ;volta com a posicao da carta
 
     loadn r2, #5
-    loadn r1, #20
     add r0, r0, r2
+    loadn r1, #20
     call imprimecarta
     inc r4
 
     loadn r2, #5    ;maximo de cartas
     cmp r4, r2
     jeg maiscarta_end
-    loadn r6, #21
+    loadn r2, #21
     load r1, soma
-    cmp r1, r6
+    cmp r1, r2
     jeg maiscarta_end
 
-    maiscarta_loop:
+    maisCarta_pergunta:
         call input_;retorna r2
-        loadn r3, #'n'
-        cmp r2, r3
-        jeq maiscarta_end
-        loadn r3, #'s'
-        cmp r2, r3
+        loadn r1, #'s'
+        cmp r2, r1
         jeq maiscarta
-        jmp maiscarta_loop
-        maiscarta_end:
+        loadn r1, #'n'
+        cmp r2, r1
+        jne maisCarta_pergunta
 
+    maiscarta_end:
         loadn r2, #40
         loadn r0, #17
         mul r0, r0, r2
@@ -243,14 +244,14 @@ maiscarta:
         loadn r2, #0
         call ImprimeStr
            
-        loadn r5, #21
-        load r3, soma
-        cmp r3, r5
+        loadn r2, #21
+        load r1, soma
+        cmp r1, r2
         jeg round_fim
 
-loadn r0, #5
-loadn r4, #1
-gameplay_mesa:
+ loadn r0, #5
+ loadn r4, #1
+ gameplay_mesa:
         call delay
 
         load r1, soma_mesa
@@ -268,13 +269,10 @@ gameplay_mesa:
         inc r4
 
         load r1, soma_mesa
-        loadn r5, #15
-        cmp r1, r5
+        loadn r2, #15
+        cmp r1, r2
         jle gameplay_mesa
         round_fim:
-pop r7
-pop r6
-pop r5
 pop r4
 pop r3
 pop r2
@@ -285,13 +283,13 @@ rts
 
 
 printnum:
-push r0 ; posição na tela
-push r1 ; valor a ser imprisso
-push r2 ; 
-push r3
-push r4
-push r5
-push r6
+ push r0 ; posição na tela
+ push r1 ; valor a ser imprisso
+ push r2 ; 
+ push r3
+ push r4
+ push r5
+ push r6
     loadn r2, #1000
     loadn r3, #10       ; para diminuir de 10 em 10
     loadn r4, #'0'
@@ -316,42 +314,39 @@ rts
 
 
 random_num:
-    push r1
-    push r2
-    push r0
-    push r4  
-    push r6
-    push r7
+ push r1
+ push r2
+ push r0
+ push r4  
+ push r6
     load r3, seed
     loadn r1, #17
     loadn r0, #43
     loadn r4, #256
     loadn r6, #11
-    loadn r7, #1
     mov r2, r3
     mul r2, r2, r1
     add r2, r2, r0
     mod r2, r2, r4
     store seed, r2
     mod r2, r2, r6
-    add r2, r2, r7
+    inc r2
     mov r3, r2
-    pop r7
-    pop r6
-    pop r4
-    pop r0
-    pop r2
-    pop r1
-    rts
+pop r6
+pop r4
+pop r0
+pop r2
+pop r1
+rts
 
 
 
 
 
 apagatela:
-push r0
-push r1
-push r2
+ push r0
+ push r1
+ push r2
     loadn r0, #0
     loadn r1, #'\0'
     loadn r2, #1200
@@ -366,12 +361,12 @@ pop r0
 rts
 
 carta:
-string "XX##"
-string "NN##"
-string "NN##"
-string "##NN"
-string "##NN"
-string "##XX"
+string "####"
+string "####"
+string "####"
+string "####"
+string "####"
+string "####"
 imprimecarta:
  push r0 ;coluna
  push r1 ;linha
@@ -420,76 +415,101 @@ pop r0
 rts
 
 valores: string "A234567891JQK"
+naipes:  string "<>{}@^`~[]{}wxyz"
 viracarta:
  push r0    ;pos
  push r1
- push r2    ;val
- push r3
+ push r2    ;naipe
+ push r3    ;val
+ push r4
     loadn r1, #valores
     dec r1
-    add r1, r1, r2
+    add r1, r1, r3
     loadi r1, r1
     outchar r1, r0
-    loadn r2, #'1'
-    cmp r1, r2
+    loadn r4, #'1'
+    cmp r1, r4
     jne viracarta_naipe
     inc r0
-    loadn r2, #'0'
-    outchar r2, r0
+    loadn r4, #'0'
+    outchar r4, r0
     dec r0
 
     viracarta_naipe:
     ;naipe 1
-    loadn r2, #40
-    add r0, r0, r2
-
-    loadn r2, #40
-    add r0, r0, r2
-    inc r0
-
-    loadn r2, #40
-    add r0, r0, r2
-    dec r0
-
-    loadn r2, #40
-    add r0, r0, r2
-    inc r0
-    
-    ;naipe 2
-    loadn r2, #40
-    add r0, r0, r2
-    inc r0
-
-    loadn r2, #40
-    add r0, r0, r2
-    inc r0
-
-    loadn r2, #40
-    add r0, r0, r2
-    dec r0
-
-    loadn r2, #40
-    add r0, r0, r2
-    inc r0
-    
-    viracarta_fundo:
-    loadn r1, #valores
+    loadn r4, #40
+    add r0, r0, r4 ;pula linha
+    load r1, naipes
     dec r1
     add r1, r1, r2
     loadi r1, r1
+    
     outchar r1, r0
-    loadn r2, #'1'
-    cmp r1, r2
+
+    inc r0
+    inc r1
+    outchar r1, r0
+
+    loadn r4, #40
+    add r0, r0, r4  ;pula linha
+
+    dec r0
+    inc r1
+    outchar r1, r0
+
+    inc r0
+    inc r1
+    outchar r1, r0
+
+    ;naipe 2
+    inc r0
+    loadn r4, #40
+    add r0, r0, r4  ;pula linha
+    load r1, naipes
+    dec r1
+    add r1, r1, r2
+    loadi r1, r1
+
+    outchar r1, r0
+
+    inc r0
+    inc r1
+    outchar r1, r0
+
+    loadn r4, #40
+    add r0, r0, r4  ;pula linha
+
+    dec r0
+    inc r1
+    outchar r1, r0
+
+    inc r0
+    inc r1
+    outchar r1, r0
+
+    viracarta_fundo:
+    loadn r4, #40
+    add r0, r0, r4  ;pula linha
+
+    loadn r1, #valores
+    dec r1
+    add r1, r1, r3
+    loadi r1, r1
+
+    outchar r1, r0
+
+    loadn r4, #'1'
+    cmp r1, r4
     jne viracarta_fim
     dec r0
-    loadn r2, #'1'
-    outchar r2, r0
+
+    loadn r4, #'1'
+    outchar r4, r0
     inc r0
-    loadn r2, #'0'
-    outchar r2, r0
+    loadn r4, #'0'
+    outchar r4, r0
     viracarta_fim:
-
-
+pop r4
 pop r3
 pop r2
 pop r1
@@ -497,26 +517,26 @@ pop r0
 rts
 
 delay:
-    push r0
-    push r1
+ push r0
+ push r1
     loadn r0, #64000
     loadn r1, #0
         delay_loop:
         inc r1
         cmp r1, r0
         jne delay_loop
-    pop r1
-    pop r0
-    rts
+pop r1
+pop r0
+rts
 
 
 senha: string "iamsteve"
 chickenJockey:
-push r0
-push r1
-push r2
-push r3
-push r4
+ push r0
+ push r1
+ push r2
+ push r3
+ push r4
     loadn r2, #40
     loadn r0, #4    ;numero da linha
     mul r0, r0, r2
@@ -558,9 +578,9 @@ string "         ###A  ###J  ###Q  ###K         "
 
 string "       PRESSIONE ESPACO PARA JOGAR      "
 telainicial:
-push r0
-push r1
-push r2
+ push r0
+ push r1
+ push r2
     loadn r2, #40
     loadn r0, #4    ;numero da linha
     mul r0, r0, r2
@@ -636,9 +656,9 @@ string  "            |              *            "
 string  "            |      ---     *            "
 string  "            |______________*            "
 telabet:
-push r0
-push r1
-push r2
+ push r0
+ push r1
+ push r2
     loadn r2, #40
     loadn r0, #0    ;numero da linha
     mul r0, r0, r2
@@ -686,14 +706,12 @@ pop r0
 rts
 
 ImprimeStr:
-	push r0	; posição na tela
-	push r1	; endereço da mensagem
-	push r2	; cor da mensagem
-	push r3
-	push r4
-	
+ push r0	; posição na tela
+ push r1	; endereço da mensagem
+ push r2	; cor da mensagem
+ push r3
+ push r4
 	loadn r3, #'\0'	; Criterio de parada
-
     ImprimestrLoop:	
 	    loadi r4, r1
 	    cmp r4, r3
@@ -705,9 +723,9 @@ ImprimeStr:
 	    jmp ImprimestrLoop
 	
 ImprimestrSai:	
-	pop r4
-	pop r3
-	pop r2
-	pop r1
-	pop r0
-	rts
+pop r4
+pop r3
+pop r2
+pop r1
+pop r0
+rts
