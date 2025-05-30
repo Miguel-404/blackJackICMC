@@ -545,18 +545,33 @@ chickenJockey:
     loadn r1, #jackblack
     loadn r2, #0    ;cor
     call ImprimeStr
+
+    loadn r1, #telajogo
+    loadn r2, #57
+    add r1, r1, r2
+    loadn r2, #jackblack
+    loadn r4, #' '
+    loadi r3, r2
+    jackblack_loop:
+        storei r1, r3
+        inc r1
+        inc r2
+        loadi r3, r2
+        cmp r3, r4
+        jne jackblack_loop
+
     loadn r1, #telajogo
     loadn r2, #82
     add r1, r1, r2
     loadn r2, #steve
     loadn r4, #'\0'
-    chickenJockey_loop:
+    steve_loop:
         loadi r3, r2
         storei r1, r3
         inc r1
         inc r2
         cmp r3, r4
-        jne chickenJockey_loop
+        jne steve_loop
 pop r4
 pop r3
 pop r2
@@ -576,7 +591,8 @@ string "        ====        ====                "
 string "        ====        ====                "
 string "        ================                "
 string "        ================                "
-jackblack: string      "JACKBLACK "
+
+jackblack: string      "JACKBLACK"
 telainicial1:
 string "                BLACKJACK               "
 ;SPLASH:
