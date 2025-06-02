@@ -40,6 +40,9 @@ call telainicial
         call apagatela
 
     loop:
+        loadn r0, #0
+        store soma, r0
+        store soma_mesa, r0
         call jogo
         
         ;jmp loop
@@ -247,7 +250,7 @@ jogo:
         loadn r2, #21
         load r1, soma
         cmp r1, r2
-        jeg round_fim
+        jgr round_loss
 
  loadn r0, #5
  loadn r4, #1
@@ -272,7 +275,32 @@ jogo:
         loadn r2, #15
         cmp r1, r2
         jle gameplay_mesa
-        round_fim:
+        loadn r2, #21
+        cmp r1, r2
+        jgr round_win
+    round_fim:
+    load r6, soma
+    load r7, soma_mesa
+    cmp r6, r7
+    jgr round_win
+    jle round_loss
+    round_win:
+    load r3, valoraposta
+    loadn r4, #2
+    load r5, coins
+    mul r3, r3, r4
+    add r5, r3, r5
+    store coins, r5
+    call apagatela
+    jmp loop
+    round_loss:
+    call apagatela
+    jmp loop
+
+
+
+
+
 pop r4
 pop r3
 pop r2
