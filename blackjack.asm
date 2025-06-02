@@ -43,17 +43,22 @@ call telainicial
         loadn r0, #0
         store soma, r0
         store soma_mesa, r0
+        load r1, coins
+        loadn r2, #999
+        cmp r1, r2
+        jeg tela_ganhou
+        loadn r3, #0
+        cmp r1, r3
+        jeq tela_perdeu
         call jogo
         
-        ;jmp loop
-        load r0, coins
-        loadn r1, #1000
-        cmp r0, r1
-        ;ceq tela_ganhou
-        loadn r1, #0
-        cmp r0, r1
-        ;ceq tela_perdeu
-        halt
+tela_perdeu:
+    halt
+tela_ganhou:
+    halt
+
+
+
 
 
 input_:     ;retorna r2
@@ -256,7 +261,6 @@ jogo:
  loadn r4, #1
  gameplay_mesa:
         call delay
-
         load r1, soma_mesa
         call random_num
         add r1, r1, r3
@@ -270,11 +274,12 @@ jogo:
         add r0, r0, r2
         call imprimecarta
         inc r4
-
+        call delay
         load r1, soma_mesa
         loadn r2, #15
         cmp r1, r2
         jle gameplay_mesa
+        call delay
         loadn r2, #21
         cmp r1, r2
         jgr round_win
