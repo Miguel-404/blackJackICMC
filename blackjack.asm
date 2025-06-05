@@ -289,6 +289,7 @@ jogo:
     cmp r6, r7
     jgr round_win
     jle round_loss
+    jeq round_tie
     round_win:
     load r3, valoraposta
     loadn r4, #2
@@ -301,6 +302,13 @@ jogo:
     round_loss:
     call apagatela
     jmp loop
+    round_tie:
+        load r3, valoraposta
+        load r5, coins
+        add r5, r3, r5
+        store coins, r5
+        call apagatela
+        jmp loop
 
 
 
