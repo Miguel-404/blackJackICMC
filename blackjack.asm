@@ -46,7 +46,7 @@ call telainicial
         load r1, coins
         loadn r2, #999
         cmp r1, r2
-        jeg tela_ganhou
+        jgr tela_ganhou
         loadn r3, #0
         cmp r1, r3
         jeq tela_perdeu
@@ -236,10 +236,13 @@ jogo:
     jeg maiscarta_end
 
     maisCarta_pergunta:
-        call input_;retorna r2
+        call input_ ;retorna r2
         loadn r1, #'s'
         cmp r2, r1
         jeq maiscarta
+        loadn r1, #'x'
+        cmp r2, r1
+        jeq double_down
         loadn r1, #'n'
         cmp r2, r1
         jne maisCarta_pergunta
@@ -310,7 +313,16 @@ jogo:
         call apagatela
         jmp loop
 
-
+    
+    double_down:
+        load r6, valoraposta
+        load r7, coins
+        sub r7, r7, r6
+        add r6, r6, r6
+        store coins, r7
+        store valoraposta, r6
+        loadn r4, #5
+        jmp maiscarta
 
 
 
