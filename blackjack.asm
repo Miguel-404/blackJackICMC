@@ -257,13 +257,14 @@ jogo:
 
     maiscarta_end:
         loadn r2, #40
-        loadn r0, #17
+        loadn r0, #16
         mul r0, r0, r2
         loadn r1, #strapaga
         loadn r2, #0
         call ImprimeStr
         loadn r2, #40
-        add r0, r0, r2
+        loadn r0, #18
+        mul r0, r0, r2
         loadn r2, #0
         call ImprimeStr
            
