@@ -2,6 +2,7 @@ jmp main
 
 Msn1:
 string "       QUER MAIS UMA CARTA? (S/N)       "
+string "           X - DOUBLE DOWN              "
 
 telajogo:
 string "                 MESA:                  "
@@ -152,7 +153,7 @@ jogo:
     loadn r2, #0
     call ImprimeStr
     loadn r2, #40
-    loadn r0, #15
+    loadn r0, #14
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
@@ -202,9 +203,16 @@ jogo:
 
 
  loadn r2, #40
- loadn r0, #17
+ loadn r0, #16
  mul r0, r0, r2
  loadn r1, #Msn1
+ loadn r2, #0
+ call ImprimeStr
+ loadn r2, #40
+ loadn r0, #18
+ mul r0, r0, r2
+ add r1, r1, r2
+ inc r1
  loadn r2, #0
  call ImprimeStr
 
@@ -252,6 +260,10 @@ jogo:
         loadn r0, #17
         mul r0, r0, r2
         loadn r1, #strapaga
+        loadn r2, #0
+        call ImprimeStr
+        loadn r2, #40
+        add r0, r0, r2
         loadn r2, #0
         call ImprimeStr
            
@@ -317,6 +329,11 @@ jogo:
     double_down:
         load r6, valoraposta
         load r7, coins
+        loadn r5, #2
+        div r7, r7, r5
+        cmp r6, r7
+        jgr maisCarta_pergunta
+        mul r7, r7, r5
         sub r7, r7, r6
         add r6, r6, r6
         store coins, r7
