@@ -168,37 +168,37 @@ jogo:
     call ImprimeStr
 
  ;cartas iniciais
-    load r1, soma_mesa
     call random_num         ;retorna r3
+    loadn r0, #5
+    loadn r1, #4
+    call imprimecarta
+    load r1, soma_mesa
     add r1, r3, r1
     store soma_mesa, r1
     loadn r0, #63
     call printnum
-    loadn r0, #5
-    loadn r1, #4
-    call imprimecarta
 
     loadn r4, #0
-    load r1, soma
     call random_num         ;retorna r3
-    add r1, r3, r1
-    store soma, r1
-    loadn r0, #1143
-    call printnum
     loadn r0, #5
     loadn r1, #20
     call imprimecarta
-    inc r4
-
     load r1, soma
-    call random_num         ;retorna r3
     add r1, r3, r1
     store soma, r1
     loadn r0, #1143
     call printnum
+    inc r4
+
+    call random_num         ;retorna r3
     loadn r0, #10
     loadn r1, #20
     call imprimecarta
+    load r1, soma
+    add r1, r3, r1
+    store soma, r1
+    loadn r0, #1143
+    call printnum
     inc r4
 
 
@@ -220,20 +220,21 @@ jogo:
  jmp maisCarta_pergunta
 
  maiscarta:
-    load r1, soma
     call random_num   ;retorna r3
-    add r1, r3, r1
-    store soma, r1
-    push r0 ;preserva a posicao da carta
-    loadn r0, #1143
-    call printnum
-    pop r0  ;volta com a posicao da carta
-
     loadn r2, #5
     add r0, r0, r2
     loadn r1, #20
     call imprimecarta
+    load r1, soma
+    add r1, r3, r1
+    store soma, r1
+    push r0 ;preserva a posicao da carta
+    loadn r0, #1143
+    load r1,soma
+    call printnum
+    pop r0  ;volta com a posicao da carta
     inc r4
+
 
     loadn r2, #5    ;maximo de cartas
     cmp r4, r2
@@ -394,7 +395,7 @@ random_num:
     loadn r1, #17
     loadn r0, #43
     loadn r4, #256
-    loadn r6, #14
+    loadn r6, #13
     mov r2, r3
     mul r2, r2, r1
     add r2, r2, r0
@@ -484,11 +485,12 @@ pop r3
 pop r2
 pop r1
 pop r0
+    call viracarta
 rts
 
 valores: string "A23456789:AJQK"
 naipes:  string "<>{}@^`~[]{}wxyz"
-umOuOnze: string "UM OU ONZE?(u/o)"
+umOuOnze: string "       UM OU ONZE?(u/o)          "
 viracarta:
  push r0    ;col
  push r1    ;lin
@@ -605,7 +607,7 @@ viracarta:
 
     viracarta_pergunta:
         loadn r2, #40
-        loadn r0, #17
+        loadn r0, #16
         mul r0, r0, r2
         loadn r1, #umOuOnze
         loadn r2, #0
