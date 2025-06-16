@@ -394,7 +394,7 @@ random_num:
     loadn r1, #17
     loadn r0, #43
     loadn r4, #256
-    loadn r6, #11
+    loadn r6, #14
     mov r2, r3
     mul r2, r2, r1
     add r2, r2, r0
@@ -402,6 +402,7 @@ random_num:
     store seed, r2
     mod r2, r2, r6
     inc r2
+	inc r2
     mov r3, r2
 pop r6
 pop r4
@@ -485,22 +486,29 @@ pop r1
 pop r0
 rts
 
-valores: string "A234567891JQK"
+valores: string "A23456789:AJQK"
 naipes:  string "<>{}@^`~[]{}wxyz"
+umOuOnze: string "UM OU ONZE?(u/o)"
 viracarta:
- push r0    ;pos
- push r1
+ push r0    ;col
+ push r1    ;lin
  push r2    ;naipe
- push r3    ;val
+;push r3    ;val
  push r4
+    loadn r4,#40
+    mul r1,r1,r4
+    add r0,r0,r1
+
     loadn r1, #valores
     dec r1
     add r1, r1, r3
     loadi r1, r1
     outchar r1, r0
-    loadn r4, #'1'
+    loadn r4, #':'
     cmp r1, r4
     jne viracarta_naipe
+    loadn r4, #'1'
+    outchar r4, r0
     inc r0
     loadn r4, #'0'
     outchar r4, r0
@@ -510,53 +518,59 @@ viracarta:
     ;naipe 1
     loadn r4, #40
     add r0, r0, r4 ;pula linha
-    load r1, naipes
+    loadn r1, #naipes
     dec r1
     add r1, r1, r2
-    loadi r1, r1
+    loadi r4, r1
     
-    outchar r1, r0
-
+    outchar r4, r0
+    
     inc r0
     inc r1
-    outchar r1, r0
-
+    loadi r4,r1
+    outchar r4, r0
+    
     loadn r4, #40
     add r0, r0, r4  ;pula linha
-
+    
     dec r0
     inc r1
-    outchar r1, r0
+    loadi r4,r1
+    outchar r4, r0
 
     inc r0
     inc r1
-    outchar r1, r0
+    loadi r4,r1
+    outchar r4, r0
 
     ;naipe 2
     inc r0
     loadn r4, #40
     add r0, r0, r4  ;pula linha
-    load r1, naipes
+    loadn r1, #naipes
     dec r1
     add r1, r1, r2
-    loadi r1, r1
+    loadi r4, r1
 
-    outchar r1, r0
+    outchar r4, r0
 
     inc r0
     inc r1
-    outchar r1, r0
+    loadi r4,r1
+    outchar r4, r0
 
     loadn r4, #40
     add r0, r0, r4  ;pula linha
 
     dec r0
     inc r1
-    outchar r1, r0
+    loadi r4,r1
+    outchar r4, r0
 
     inc r0
     inc r1
-    outchar r1, r0
+    loadi r4,r1
+    outchar r4, r0
 
     viracarta_fundo:
     loadn r4, #40
@@ -569,19 +583,45 @@ viracarta:
 
     outchar r1, r0
 
-    loadn r4, #'1'
+    loadn r4, #':'
     cmp r1, r4
-    jne viracarta_fim
+    jne viracarta_resultado
     dec r0
-
     loadn r4, #'1'
     outchar r4, r0
     inc r0
     loadn r4, #'0'
     outchar r4, r0
+
+    viracarta_resultado:
+    loadn r4,#10
+    cmp r3,r4
+    jel viracarta_fim
+    loadn r4,#11
+    cmp r3,r4
+    jeq viracarta_pergunta
+    loadn r3,#10
+    jmp viracarta_fim
+
+    viracarta_pergunta:
+        loadn r2, #40
+        loadn r0, #17
+        mul r0, r0, r2
+        loadn r1, #umOuOnze
+        loadn r2, #0
+        call ImprimeStr
+
+        call input_;retorna r2
+        loadn r3,#1
+        loadn r1, #'u'
+        cmp r2, r1
+        jeq viracarta_fim
+        loadn r3,#11
+        loadn r1, #'o'
+        cmp r2, r1
+        jne viracarta_pergunta
     viracarta_fim:
 pop r4
-pop r3
 pop r2
 pop r1
 pop r0
