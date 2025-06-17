@@ -807,24 +807,6 @@ viracarta:
         cmp r2, r1
         jne viracarta_pergunta
     viracarta_fim:
-    viracarta_pergunta:
-        loadn r2, #40
-        loadn r0, #16
-        mul r0, r0, r2
-        loadn r1, #umOuOnze
-        loadn r2, #0
-        call ImprimeStr
-
-        call input_;retorna r2
-        loadn r3,#1
-        loadn r1, #'u'
-        cmp r2, r1
-        jeq viracarta_fim
-        loadn r3,#11
-        loadn r1, #'o'
-        cmp r2, r1
-        jne viracarta_pergunta
-    viracarta_fim:
 pop r4
 pop r2
 pop r1
