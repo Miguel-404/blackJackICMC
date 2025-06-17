@@ -781,10 +781,32 @@ viracarta:
     jel viracarta_fim
     loadn r4,#11
     cmp r3,r4
-    jeq viracarta_pergunta
     loadn r3,#10
-    jmp viracarta_fim
+    jne viracarta_fim
+    loadn r3,#1
+    loadn r4,#600;escolha da mesa
+    cmp r0,r4
+    jle viracarta_fim
 
+    loadn r2, #40
+    loadn r0, #16
+    mul r0, r0, r2
+    loadn r1, #umOuOnze
+    loadn r2, #0
+    call ImprimeStr
+    viracarta_pergunta:
+        call input_;retorna r2
+
+        loadn r3,#1
+        loadn r1, #'u'
+        cmp r2, r1
+        jeq viracarta_fim
+
+        loadn r3,#11
+        loadn r1, #'o'
+        cmp r2, r1
+        jne viracarta_pergunta
+    viracarta_fim:
     viracarta_pergunta:
         loadn r2, #40
         loadn r0, #16
