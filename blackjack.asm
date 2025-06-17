@@ -1,16 +1,5 @@
 jmp main
 
-Msn1:
-string "       QUER MAIS UMA CARTA? (S/N)       "
-string "           X - DOUBLE DOWN              "
-
-telajogo:
-string "                 MESA:                  "
-string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
-string "               PLAYER:                  "
-steve:
-string "                STEVE:                  "
-
 strapaga:
 string "                                        "
 
@@ -66,6 +55,7 @@ call telainicial
         cmp r1, r3
         jeq tela_perdeu_fim
         call jogo
+        jmp loop
         
 tela_perdeu_fim:
  loadn r2, #40
@@ -110,6 +100,7 @@ tela_perdeu_fim:
  cmp r2, r4
  jne tela_perdeu_fim
  halt
+
 tela_ganhou_fim:
  loadn r0, #10
  mul r0, r0, r2
@@ -164,15 +155,13 @@ pop r7
 pop r1
 rts
 
-valoraposta: var #1
-jogo:
- push fr
- push r0 ;posicao do numero
- push r1
- push r2 
- push r3 
- push r4
- aposta:
+aposta:
+push r0
+push r1
+push r2
+push r3
+push r4
+    aposta_reset:
     call telabet
     loadn r0, #7
     load r1, coins
@@ -187,7 +176,7 @@ jogo:
         call input_;=inchar r2
         loadn r3, #27   ;27=esc
         cmp r2, r3
-        jeq aposta
+        jeq aposta_reset
         loadn r3, #'9'
         cmp r2, r3
         jgr aposta_input
@@ -214,41 +203,36 @@ jogo:
         inchar r2
         loadn r3, #27   ;27=esc
         cmp r2, r3
-        jeq aposta
+        jeq aposta_reset
         inchar r2
         loadn r3, #13   ;13=enter
         cmp r2, r3
         jne aposta_confirma
     load r0, coins
     cmp r1, r0
-    jgr aposta
+    jgr aposta_reset
     sub r1, r0, r1
     store coins, r1
+pop r4
+pop r3
+pop r2
+pop r1
+pop r0
+rts
+valoraposta: var #1
 
- ;tela
-    call apagatela
-    loadn r2, #40
-    loadn r0, #1
-    mul r0, r0, r2
-    loadn r1, #telajogo
-    loadn r2, #0
-    call ImprimeStr
-    loadn r2, #40
-    loadn r0, #14
-    mul r0, r0, r2
-    add r1, r1, r2
-    inc r1
-    loadn r2, #0
-    call ImprimeStr
-    loadn r2, #40
-    loadn r0, #28
-    mul r0, r0, r2
-    add r1, r1, r2
-    inc r1
-    loadn r2, #0
-    call ImprimeStr
+jogo:
+ push fr
+ push r0 ;posicao do numero
+ push r1
+ push r2 
+ push r3 
+ push r4
+ call aposta
 
- ;cartas iniciais
+ call tela_jogo
+
+ ;cartas iniciais:
     call random_num         ;retorna r3
     loadn r0, #5
     loadn r1, #4
@@ -290,10 +274,10 @@ jogo:
  loadn r2, #0
  call ImprimeStr
  loadn r2, #40
- loadn r0, #18
- mul r0, r0, r2
  add r1, r1, r2
  inc r1
+ loadn r0, #18
+ mul r0, r0, r2
  loadn r2, #0
  call ImprimeStr
 
@@ -316,7 +300,6 @@ jogo:
     pop r0  ;volta com a posicao da carta
     inc r4
 
-
     loadn r2, #5    ;maximo de cartas
     cmp r4, r2
     jeg maiscarta_end
@@ -325,6 +308,14 @@ jogo:
     cmp r1, r2
     jeg maiscarta_end
 
+    push r0
+    loadn r2, #40
+    loadn r0, #16
+    mul r0, r0, r2
+    loadn r1, #Msn1
+    loadn r2, #0
+    call ImprimeStr
+    pop r0
     maisCarta_pergunta:
         call input_ ;retorna r2
         loadn r1, #'s'
@@ -359,36 +350,38 @@ jogo:
  loadn r4, #1
  gameplay_mesa:
         call delay
-        load r1, soma_mesa
         call random_num
+        loadn r2, #5
+        loadn r1, #4
+        add r0, r0, r2
+        call imprimecarta
+        load r1, soma_mesa
         add r1, r1, r3
         store soma_mesa, r1
         push r0
         loadn r0, #63
         call printnum
         pop r0
-        loadn r2, #5
-        loadn r1, #4
-        add r0, r0, r2
-        call imprimecarta
         inc r4
+
         call delay
         load r1, soma_mesa
         loadn r2, #15
         cmp r1, r2
         jle gameplay_mesa
+
         call delay
         loadn r2, #21
         cmp r1, r2
         jgr round_win
-    round_fim:
+ round_fim:
     load r6, soma
     load r7, soma_mesa
     cmp r6, r7
     jgr round_win
     jle round_loss
     jeq round_tie
-    round_win:
+ round_win:
     load r3, valoraposta
     loadn r4, #2
     load r5, coins
@@ -431,6 +424,7 @@ jogo:
     inc r1
     loadn r2, #0
     call ImprimeStr
+
     mov r1, r7
     loadn r0, #63
     call printnum
@@ -441,12 +435,11 @@ jogo:
     loadn r3, #' '
     cmp r2, r3
     ceq apagatela
-    jeq loop
+    jeq jogo_fim
     jne tela_win
 
-    round_loss:
+ round_loss:
     call apagatela
-    
     tela_loss:
     loadn r2, #40
     loadn r0, #1
@@ -489,6 +482,7 @@ jogo:
     inc r1
     loadn r2, #0
     call ImprimeStr
+
     mov r1, r7
     loadn r0, #63
     call printnum
@@ -499,32 +493,30 @@ jogo:
     loadn r3, #' '
     cmp r2, r3
     ceq apagatela
-    jeq loop
+    jeq jogo_fim
     jne tela_loss
-    round_tie:
-        load r3, valoraposta
-        load r5, coins
-        add r5, r3, r5
-        store coins, r5
-        call apagatela
-        jmp loop
-    double_down:
-        load r6, valoraposta
-        load r7, coins
-        loadn r5, #2
-        div r7, r7, r5
-        cmp r6, r7
-        jgr maisCarta_pergunta
-        mul r7, r7, r5
-        sub r7, r7, r6
-        add r6, r6, r6
-        store coins, r7
-        store valoraposta, r6
-        loadn r4, #5
-        jmp maiscarta
-
-
-
+ round_tie:
+    load r3, valoraposta
+    load r5, coins
+    add r5, r3, r5
+    store coins, r5
+    call apagatela
+    jmp jogo_fim
+ double_down:
+    load r6, valoraposta
+    load r7, coins
+    loadn r5, #2
+    div r7, r7, r5
+    cmp r6, r7
+    jgr maisCarta_pergunta
+    mul r7, r7, r5
+    sub r7, r7, r6
+    add r6, r6, r6
+    store coins, r7
+    store valoraposta, r6
+    loadn r4, #5
+    jmp maiscarta
+jogo_fim:
 pop r4
 pop r3
 pop r2
@@ -553,15 +545,15 @@ printnum:
         add r5, r5, r4  ; adiciona o codigo do caracter 0 para printar
         outchar r5, r0
         inc r0
-        cmp r2,r6       ; se a casa decimal atual for a das unidades, para o loop
+        cmp r2,r6       ; se a casa decimal atual for a das unidades, interrompe o loop
         jne printnum_loop
-pop r6
-pop r5
-pop r4
-pop r3
-pop r2
-pop r1
-pop r0
+ pop r6
+ pop r5
+ pop r4
+ pop r3
+ pop r2
+ pop r1
+ pop r0
 rts
 
 
@@ -575,7 +567,7 @@ random_num:
     loadn r1, #17
     loadn r0, #43
     loadn r4, #256
-    loadn r6, #13
+    loadn r6, #13   ;maximo - minimo
     mov r2, r3
     mul r2, r2, r1
     add r2, r2, r0
@@ -585,11 +577,11 @@ random_num:
     inc r2
 	inc r2
     mov r3, r2
-pop r6
-pop r4
-pop r0
-pop r2
-pop r1
+ pop r6
+ pop r4
+ pop r0
+ pop r2
+ pop r1
 rts
 
 
@@ -608,9 +600,9 @@ apagatela:
             inc r0
             cmp r0, r2
             jne apagatela_loop
-pop r2
-pop r1
-pop r0
+ pop r2
+ pop r1
+ pop r0
 rts
 
 carta:
@@ -661,21 +653,21 @@ imprimecarta:
     add r1, r1, r2
     loadn r2, #0
     call ImprimeStr
-pop r3
-pop r2
-pop r1
-pop r0
-    call viracarta
+ pop r3
+ pop r2
+ pop r1
+ pop r0
+ call viracarta
 rts
 
 valores: string "A23456789:AJQK"
 naipes:  string "<>{}@^`~[]{}wxyz"
-umOuOnze: string "       UM OU ONZE?(u/o)          "
+umOuOnze:string "       UM OU ONZE?(u/o)          "
 viracarta:
  push r0    ;col
  push r1    ;lin
  push r2    ;naipe
-;push r3    ;val
+ ;push r3   ;val
  push r4
     loadn r4,#40
     mul r1,r1,r4
@@ -783,8 +775,9 @@ viracarta:
     cmp r3,r4
     loadn r3,#10
     jne viracarta_fim
-    loadn r3,#1
-    loadn r4,#600;escolha da mesa
+
+    loadn r3,#1;escolha da mesa
+    loadn r4,#580
     cmp r0,r4
     jle viracarta_fim
 
@@ -807,10 +800,10 @@ viracarta:
         cmp r2, r1
         jne viracarta_pergunta
     viracarta_fim:
-pop r4
-pop r2
-pop r1
-pop r0
+ pop r4
+ pop r2
+ pop r1
+ pop r0
 rts
 
 delay:
@@ -822,8 +815,8 @@ delay:
         inc r1
         cmp r1, r0
         jne delay_loop
-pop r1
-pop r0
+ pop r1
+ pop r0
 rts
 
 
@@ -843,11 +836,11 @@ chickenJockey:
     loadn r2, #0    ;cor
     call ImprimeStr
 
-    loadn r1, #telajogo
+    loadn r1, #telajogo1
     loadn r2, #57
     add r1, r1, r2
     loadn r2, #jackblack
-    loadn r4, #' '
+    loadn r4, #'\0'
     loadi r3, r2
     jackblack_loop:
         storei r1, r3
@@ -857,7 +850,7 @@ chickenJockey:
         cmp r3, r4
         jne jackblack_loop
 
-    loadn r1, #telajogo
+    loadn r1, #telajogo1
     loadn r2, #82
     add r1, r1, r2
     loadn r2, #steve
@@ -869,25 +862,12 @@ chickenJockey:
         inc r2
         cmp r3, r4
         jne steve_loop
-pop r4
-pop r3
-pop r2
-pop r1
-pop r0
+ pop r4
+ pop r3
+ pop r2
+ pop r1
+ pop r0
 rts
-craftmine:
-string "        ================                "
-string "        ================                "
-string "        ==##  ====  ##==                "
-string "        ==##  ====  ##==                "
-string "        ======%%%%======                "
-string "        ======%%%%======                "
-string "        ====  ====  ====                "
-string "        ====  ====  ====                "
-string "        ====        ====                "
-string "        ====        ====                "
-string "        ================                "
-string "        ================                "
 
 jackblack: string      "JACKBLACK"
 telainicial1:
@@ -974,14 +954,45 @@ pop r1
 pop r2
 rts
 
-telabet1:
-string  "MOEDAS:                                 "
-string  "               SUA APOSTA:              "
-string  "             ______________             "
-string  "            |              *            "
-string  "            |      ---     *            "
-string  "            |______________*            "
+Msn1:
+string "       QUER MAIS UMA CARTA? (S/N)       "
+string "           X - DOUBLE DOWN              "
 
+telajogo1:
+string "                 MESA:                  "
+string "    ---$$$$$$$$(BLACKJACK)$$$$$$$$---   "
+string "               PLAYER:                  "
+steve:
+string "                STEVE:                  "
+tela_jogo:
+ push r2
+ push r1
+ push r0
+    call apagatela
+    loadn r2, #40
+    loadn r1, #telajogo1
+    loadn r0, #1
+    mul r0, r0, r2
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r1, r1, r2
+    loadn r0, #14
+    mul r0, r0, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    add r1, r1, r2
+    loadn r0, #28
+    mul r0, r0, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+ pop r0
+ pop r1
+ pop r2
+rts
 
 string_win:
 string  "                  MESA                  "
@@ -997,6 +1008,13 @@ string  "        LOGO ANTES DE VIRAR O JOGO      "
 string  "   ESPACO PARA RECUPERAR SEU DINHEIRO   "
 string  "                PLAYER                  "
 
+telabet1:
+string  "MOEDAS:                                 "
+string  "               SUA APOSTA:              "
+string  "             ______________             "
+string  "            |              *            "
+string  "            |      ---     *            "
+string  "            |______________*            "
 telabet:
  push r0
  push r1
@@ -1050,7 +1068,6 @@ rts
 ImprimeStr:
  push r0	; posição na tela
  push r1	; endereço da mensagem
- push r2	; cor da mensagem
  push r3
  push r4
 	loadn r3, #'\0'	; Criterio de parada
@@ -1058,7 +1075,6 @@ ImprimeStr:
 	    loadi r4, r1
 	    cmp r4, r3
 	    jeq ImprimestrSai
-	    add r4, r2, r4
 	    outchar r4, r0
 	    inc r0
 	    inc r1
@@ -1067,7 +1083,6 @@ ImprimeStr:
 ImprimestrSai:	
 pop r4
 pop r3
-pop r2
 pop r1
 pop r0
 rts
