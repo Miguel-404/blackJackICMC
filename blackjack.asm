@@ -731,13 +731,15 @@ rts
 
 valores: string "A23456789:AJQK"
 naipes:  string "<>{}@^`~[]{}wxyz"
-umOuOnze:string "       UM OU ONZE?(u/o)          "
+umOuOnze:string "             UM OU ONZE? (u/o)          "
 viracarta:
  push r0    ;col
  push r1    ;lin
  push r2    ;naipe
  ;push r3   ;val
  push r4
+ push r5
+ push r6
     loadn r4,#40
     mul r1,r1,r4
     add r0,r0,r1
@@ -880,6 +882,8 @@ viracarta:
         cmp r2, r1
         jne viracarta_pergunta
     viracarta_fim:
+ pop r6
+ pop r5
  pop r4
  pop r2
  pop r1
