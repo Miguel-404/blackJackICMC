@@ -102,6 +102,7 @@ tela_perdeu_fim:
  halt
 
 tela_ganhou_fim:
+ loadn r2, #40
  loadn r0, #10
  mul r0, r0, r2
  loadn r1, #string_ganhou_fim
@@ -116,6 +117,13 @@ tela_ganhou_fim:
  call ImprimeStr
  loadn r2, #40
  loadn r0, #20
+ mul r0, r0, r2
+ add r1, r1, r2
+ inc r1
+ loadn r2, #0
+ call ImprimeStr
+ loadn r2, #40
+ loadn r0, #25
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
@@ -340,11 +348,10 @@ jogo:
         mul r0, r0, r2
         loadn r2, #0
         call ImprimeStr
-           
         loadn r2, #21
         load r1, soma
         cmp r1, r2
-        jgr round_loss
+        jgr round_fim
 
  loadn r0, #5
  loadn r4, #1
@@ -373,10 +380,15 @@ jogo:
         call delay
         loadn r2, #21
         cmp r1, r2
-        jgr round_win
+        jgr round_fim
  round_fim:
     load r6, soma
     load r7, soma_mesa
+    loadn r5, #21
+    cmp r6, r5
+    jgr round_loss
+    cmp r7, r5
+    jgr round_win
     cmp r6, r7
     jgr round_win
     jle round_loss
@@ -501,21 +513,75 @@ jogo:
     add r5, r3, r5
     store coins, r5
     call apagatela
-    jmp jogo_fim
+ tela_tie:
+    loadn r2, #40
+    loadn r0, #1
+    mul r0, r0, r2
+    loadn r1, #string_tie
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #5
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #15
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #16
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #18
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #28
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    loadn r2, #0
+    call ImprimeStr
+
+    mov r1, r7
+    loadn r0, #63
+    call printnum
+    mov r1, r6
+    loadn r0, #1143
+    call printnum
+    call input_ ;retorna r2
+    loadn r3, #' '
+    cmp r2, r3
+    ceq apagatela
+    jeq jogo_fim
+    jne tela_loss
  double_down:
     load r6, valoraposta
     load r7, coins
     loadn r5, #2
-    div r7, r7, r5
+    mul r5, r5, r6
     cmp r6, r7
     jgr maisCarta_pergunta
-    mul r7, r7, r5
     sub r7, r7, r6
     add r6, r6, r6
     store coins, r7
     store valoraposta, r6
     loadn r4, #5
     jmp maiscarta
+
 jogo_fim:
 pop r4
 pop r3
@@ -1006,6 +1072,14 @@ string  "          VOCE PERDEU O ROUND           "
 string  "        99% DOS JOGADORES DESISTE       "
 string  "        LOGO ANTES DE VIRAR O JOGO      "
 string  "   ESPACO PARA RECUPERAR SEU DINHEIRO   "
+string  "                PLAYER                  "
+
+string_tie:
+string  "                  MESA                  "
+string  "                EMPATE!!!               "
+string  "               FOI QUASE!               "
+string  "         A PROXIMA VAI SER SUA!         "
+string  "      ESPACO PARA GANHAR A PROXIMA      "
 string  "                PLAYER                  "
 
 telabet1:
