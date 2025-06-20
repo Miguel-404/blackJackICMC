@@ -219,6 +219,9 @@ push r4
     load r0, coins
     cmp r1, r0
     jgr aposta_reset
+    loadn r2, #0
+    cmp r1, r2
+    jeq aposta_reset
     sub r1, r0, r1
     store coins, r1
 pop r4
@@ -767,7 +770,7 @@ viracarta:
     
     inc r0
     inc r1
-    loadi r4,r1
+    loadi r4, r1
     outchar r4, r0
     
     loadn r4, #40
@@ -842,10 +845,21 @@ viracarta:
     loadn r3,#10
     jne viracarta_fim
 
-    loadn r3,#1;escolha da mesa
-    loadn r4,#580
-    cmp r0,r4
-    jle viracarta_fim
+    load r5, soma_mesa
+    loadn r6, #10
+    cmp r5, r6
+    jgr um
+    jel onze
+    um:
+        loadn r3,#1;escolha da mesa
+        loadn r4,#580
+        cmp r0,r4
+        jle viracarta_fim
+    onze:
+        loadn r3,#11;escolha da mesa
+        loadn r4,#580
+        cmp r0,r4
+        jle viracarta_fim
 
     loadn r2, #40
     loadn r0, #16
