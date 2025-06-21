@@ -653,8 +653,20 @@ random_num:
  pop r1
 rts
 
+random_naipe_indice: ; retorna r2 com {0, 4, 8, 12}
+    push r0
+    push r1
+    push r3
 
+    load r0, seed      ; pega valor da seed
+    loadn r1, #4
+    mod r3, r0, r1     ; r3 = 0, 1, 2, 3
+    mul r2, r3, r1     ; r2 = 0, 4, 8, 12
 
+    pop r3
+    pop r1
+    pop r0
+    rts
 
 
 apagatela:
@@ -762,30 +774,29 @@ viracarta:
     viracarta_naipe:
     ;naipe 1
     loadn r4, #40
-    add r0, r0, r4 ;pula linha
+    add r0, r0, r4   ;pula linha
     loadn r1, #naipes
-    dec r1
-    add r1, r1, r2
-    loadi r4, r1
-    
+    call random_naipe_indice   ;retorna r2
+    add r5, r1, r2
+    loadi r4, r5
     outchar r4, r0
-    
+
     inc r0
-    inc r1
-    loadi r4, r1
+    inc r5
+    loadi r4, r5
     outchar r4, r0
     
     loadn r4, #40
     add r0, r0, r4  ;pula linha
     
     dec r0
-    inc r1
-    loadi r4,r1
+    inc r5
+    loadi r4, r5
     outchar r4, r0
 
     inc r0
-    inc r1
-    loadi r4,r1
+    inc r5
+    loadi r4,r5
     outchar r4, r0
 
     ;naipe 2
@@ -793,28 +804,26 @@ viracarta:
     loadn r4, #40
     add r0, r0, r4  ;pula linha
     loadn r1, #naipes
-    dec r1
-    add r1, r1, r2
-    loadi r4, r1
-
+    add r5, r1, r2
+    loadi r4, r5
     outchar r4, r0
 
     inc r0
-    inc r1
-    loadi r4,r1
+    inc r5
+    loadi r4,r5
     outchar r4, r0
 
     loadn r4, #40
     add r0, r0, r4  ;pula linha
 
     dec r0
-    inc r1
-    loadi r4,r1
+    inc r5
+    loadi r4,r5
     outchar r4, r0
 
     inc r0
-    inc r1
-    loadi r4,r1
+    inc r5
+    loadi r4,r5
     outchar r4, r0
 
     viracarta_fundo:
