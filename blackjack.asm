@@ -350,26 +350,24 @@ jogo:
    loadn r2, #21
    load r1, soma
    cmp r1, r2
-   jeg maiscarta_fim
-
-   jmp maiscarta
+   jle maiscarta
 
     maiscarta_fim:
-        loadn r2, #40
-        loadn r0, #16
-        mul r0, r0, r2
-        loadn r1, #strapaga
-        loadn r2, #0
-        call ImprimeStr
-        loadn r2, #40
-        loadn r0, #18
-        mul r0, r0, r2
-        loadn r2, #0
-        call ImprimeStr
-        loadn r2, #21
-        load r1, soma
-        cmp r1, r2
-        jgr round_fim
+      loadn r2, #40
+      loadn r0, #16
+      mul r0, r0, r2
+      loadn r1, #strapaga
+      loadn r2, #0
+      call ImprimeStr
+      loadn r2, #40
+      loadn r0, #18
+      mul r0, r0, r2
+      loadn r2, #0
+      call ImprimeStr
+      loadn r2, #21
+      load r1, soma
+      cmp r1, r2
+      jeg round_fim
 
  loadn r0, #5
  loadn r4, #1
