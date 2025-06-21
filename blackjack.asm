@@ -291,55 +291,70 @@ jogo:
  mul r0, r0, r2
  loadn r2, #0
  call ImprimeStr
-
+ 
  loadn r0, #10
- jmp maisCarta_pergunta
-
  maiscarta:
-    call random_num   ;retorna r3
-    loadn r2, #5
-    add r0, r0, r2
-    loadn r1, #20
-    call imprimecarta
-    load r1, soma
-    add r1, r3, r1
-    store soma, r1
-    push r0 ;preserva a posicao da carta
-    loadn r0, #1143
-    load r1,soma
-    call printnum
-    pop r0  ;volta com a posicao da carta
-    inc r4
+   push r0
+   loadn r2, #40
+   loadn r0, #16
+   mul r0, r0, r2
+   loadn r1, #Msn1
+   loadn r2, #0
+   call ImprimeStr
+   loadn r2, #40
+   add r1, r1, r2
+   inc r1
+   loadn r0, #18
+   mul r0, r0, r2
+   loadn r2, #0
+   call ImprimeStr
+   pop r0
 
-    loadn r2, #5    ;maximo de cartas
-    cmp r4, r2
-    jeg maiscarta_end
-    loadn r2, #21
-    load r1, soma
-    cmp r1, r2
-    jeg maiscarta_end
+   loadn r2, #5    ;maximo de cartas
+   cmp r4, r2
+   jeg maiscarta_fim
+   loadn r2, #21
+   load r1, soma
+   cmp r1, r2
+   jeg maiscarta_fim
+   maiscarta_pergunta:
+      call input_ ;retorna r2
+      loadn r1, #'x'
+      cmp r2, r1
+      jeq double_down
+      loadn r1, #'n'
+      cmp r2, r1
+      jeq maiscarta_fim
+      loadn r1, #'s'
+      cmp r2, r1
+      jne maiscarta_pergunta
+   maiscarta_pergunta_fim:
+   call random_num   ;retorna r3 com um valor de 2 a 14 (2 a 10 + a,j,q,k)
+   loadn r2, #5
+   add r0, r0, r2
+   loadn r1, #20
+   call imprimecarta
+   load r1, soma
+   add r1, r3, r1
+   store soma, r1
+   push r0 ;preserva a posicao da carta
+   loadn r0, #1143
+   load r1,soma
+   call printnum
+   pop r0  ;volta com a posicao da carta
+   inc r4
 
-    push r0
-    loadn r2, #40
-    loadn r0, #16
-    mul r0, r0, r2
-    loadn r1, #Msn1
-    loadn r2, #0
-    call ImprimeStr
-    pop r0
-    maisCarta_pergunta:
-        call input_ ;retorna r2
-        loadn r1, #'s'
-        cmp r2, r1
-        jeq maiscarta
-        loadn r1, #'x'
-        cmp r2, r1
-        jeq double_down
-        loadn r1, #'n'
-        cmp r2, r1
-        jne maisCarta_pergunta
+   loadn r2, #5    ;maximo de cartas
+   cmp r4, r2
+   jeg maiscarta_fim
+   loadn r2, #21
+   load r1, soma
+   cmp r1, r2
+   jeg maiscarta_fim
 
-    maiscarta_end:
+   jmp maiscarta
+
+    maiscarta_fim:
         loadn r2, #40
         loadn r0, #16
         mul r0, r0, r2
@@ -577,13 +592,13 @@ jogo:
     loadn r5, #2
     mul r5, r5, r6
     cmp r6, r7
-    jgr maisCarta_pergunta
+    jgr maiscarta_pergunta
     sub r7, r7, r6
     add r6, r6, r6
     store coins, r7
     store valoraposta, r6
     loadn r4, #5
-    jmp maiscarta
+    jmp maiscarta_pergunta_fim
 
 jogo_fim:
 pop r4
