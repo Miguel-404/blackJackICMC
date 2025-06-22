@@ -317,7 +317,7 @@ jogo:
    load r1, soma
    cmp r1, r2
    jeg maiscarta_fim
-   maiscarta_pergunta:
+   ;maiscarta_pergunta:
       call input_ ;retorna r2
       loadn r1, #'x'
       cmp r2, r1
@@ -327,8 +327,8 @@ jogo:
       jeq maiscarta_fim
       loadn r1, #'s'
       cmp r2, r1
-      jne maiscarta_pergunta
-   maiscarta_pergunta_fim:
+      jne maiscarta
+   maiscarta_sim:
    call random_num   ;retorna r3 com um valor de 2 a 14 (2 a 10 + a,j,q,k)
    loadn r2, #5
    add r0, r0, r2
@@ -352,7 +352,8 @@ jogo:
    cmp r1, r2
    jle maiscarta
 
-    maiscarta_fim:
+   maiscarta_fim:
+      call delay
       loadn r2, #40
       loadn r0, #16
       mul r0, r0, r2
@@ -370,33 +371,33 @@ jogo:
       jeg round_fim
 
  loadn r0, #5
- loadn r4, #1
+ loadn r5, #1
  gameplay_mesa:
-        call delay
-        call random_num
-        loadn r2, #5
-        loadn r1, #4
-        add r0, r0, r2
-        call imprimecarta
-        load r1, soma_mesa
-        add r1, r1, r3
-        store soma_mesa, r1
-        push r0
-        loadn r0, #63
-        call printnum
-        pop r0
-        inc r4
+    call delay
+    call random_num
+    loadn r2, #5
+    loadn r1, #4
+    add r0, r0, r2
+    call imprimecarta
+    load r1, soma_mesa
+    add r1, r1, r3
+    store soma_mesa, r1
+    push r0
+    loadn r0, #63
+    call printnum
+    pop r0
+    inc r5
+   
+    call delay
 
-        call delay
-        load r1, soma_mesa
-        loadn r2, #15
-        cmp r1, r2
-        jle gameplay_mesa
+    load r1, soma_mesa
+    loadn r2, #15
+    cmp r1, r2
+    jle gameplay_mesa
 
-        call delay
-        loadn r2, #21
-        cmp r1, r2
-        jgr round_fim
+    loadn r2, #21
+    cmp r1, r2
+    jgr round_fim
  round_fim:
     load r6, soma
     load r7, soma_mesa
@@ -590,13 +591,13 @@ jogo:
     loadn r5, #2
     mul r5, r5, r6
     cmp r6, r7
-    jgr maiscarta_pergunta
+    jgr maiscarta
     sub r7, r7, r6
     add r6, r6, r6
     store coins, r7
     store valoraposta, r6
     loadn r4, #5
-    jmp maiscarta_pergunta_fim
+    jmp maiscarta_sim
 
 jogo_fim:
 pop r4
