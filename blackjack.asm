@@ -390,14 +390,14 @@ jogo:
    
     call delay
 
+    loadn r2, #21
+    cmp r1, r2
+    jgr round_fim
+
     load r1, soma_mesa
     loadn r2, #15
     cmp r1, r2
     jle gameplay_mesa
-
-    loadn r2, #21
-    cmp r1, r2
-    jgr round_fim
  round_fim:
     load r6, soma
     load r7, soma_mesa
@@ -585,15 +585,17 @@ jogo:
     ceq apagatela
     jeq jogo_fim
     jne tela_loss
+
  double_down:
     load r6, valoraposta
     load r7, coins
     loadn r5, #2
     mul r5, r5, r6
-    cmp r6, r7
+    add r7, r7, r6
+    cmp r5, r7
     jgr maiscarta
-    sub r7, r7, r6
     add r6, r6, r6
+    sub r7, r7, r6
     store coins, r7
     store valoraposta, r6
     loadn r4, #5
