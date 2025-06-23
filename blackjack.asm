@@ -3,23 +3,8 @@ jmp main
 strapaga:
 string "                                        "
 
-string_ganhou_fim:
-string "           VOCE VENCEU O JOGO           "
-string "                PARABENS!               "
-string "     VOCE TIROU SEU NOME DO SERASA      "
-string "           JOGAR DENOVO?(S/N)           "
-string_perdeu_fim:
-string "           VOCE PERDEU O JOGO           "
-string "             TENTE DE NOVO!             "
-string "          PEGUE UM EMPRESTIMO!          "
-string "          A RIQUEZA TE AGUARDA!         "
-string "           JOGAR DENOVO?(S/N)           "
-coins:
-var #1
-static coins +#0, #100
+coins: var #1
 
-soma: var#1
-soma_mesa: var#1
 seed: var#1
 
 main:
@@ -54,44 +39,48 @@ call telainicial
         loadn r3, #0
         cmp r1, r3
         jeq tela_perdeu_fim
+        call aposta
         call jogo
         jmp loop
-        
+
+
+string_perdeu_fim:
+string "           VOCE PERDEU O JOGO           "
+string "             TENTE DE NOVO!             "
+string "          PEGUE UM EMPRESTIMO!          "
+string "          A RIQUEZA TE AGUARDA!         "
+string "           JOGAR DENOVO?(S/N)           "
 tela_perdeu_fim:
  loadn r2, #40
  loadn r0, #5
  mul r0, r0, r2
  loadn r1, #string_perdeu_fim
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #10
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #15
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #16
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #20
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
+
  call input_
  loadn r3, #'s'
  cmp r2, r3
@@ -99,36 +88,39 @@ tela_perdeu_fim:
  loadn r4, #'n'
  cmp r2, r4
  jne tela_perdeu_fim
+ call apagatela
  halt
 
+string_ganhou_fim:
+string "           VOCE VENCEU O JOGO           "
+string "                PARABENS!               "
+string "     VOCE TIROU SEU NOME DO SERASA      "
+string "           JOGAR DENOVO?(S/N)           "
 tela_ganhou_fim:
  loadn r2, #40
  loadn r0, #10
  mul r0, r0, r2
  loadn r1, #string_ganhou_fim
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #15
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #20
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  loadn r0, #25
  mul r0, r0, r2
  add r1, r1, r2
  inc r1
- loadn r2, #0
  call ImprimeStr
+
  call input_
  loadn r3, #'s'
  cmp r2, r3
@@ -232,6 +224,9 @@ pop r0
 rts
 valoraposta: var #1
 
+
+soma: var#1
+soma_mesa: var#1
 jogo:
  push fr
  push r0 ;posicao do numero
@@ -239,7 +234,6 @@ jogo:
  push r2 
  push r3 
  push r4
- call aposta
 
  call tela_jogo
 
@@ -282,14 +276,12 @@ jogo:
  loadn r0, #16
  mul r0, r0, r2
  loadn r1, #Msn1
- loadn r2, #0
  call ImprimeStr
  loadn r2, #40
  add r1, r1, r2
  inc r1
  loadn r0, #18
  mul r0, r0, r2
- loadn r2, #0
  call ImprimeStr
  
  loadn r0, #10
@@ -299,14 +291,12 @@ jogo:
    loadn r0, #16
    mul r0, r0, r2
    loadn r1, #Msn1
-   loadn r2, #0
    call ImprimeStr
    loadn r2, #40
    add r1, r1, r2
    inc r1
    loadn r0, #18
    mul r0, r0, r2
-   loadn r2, #0
    call ImprimeStr
    pop r0
 
@@ -358,13 +348,12 @@ jogo:
       loadn r0, #16
       mul r0, r0, r2
       loadn r1, #strapaga
-      loadn r2, #0
       call ImprimeStr
       loadn r2, #40
       loadn r0, #18
       mul r0, r0, r2
-      loadn r2, #0
       call ImprimeStr
+
       loadn r2, #21
       load r1, soma
       cmp r1, r2
@@ -423,35 +412,30 @@ jogo:
     loadn r0, #1
     mul r0, r0, r2
     loadn r1, #string_win
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #5
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #15
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #18
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #28
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
 
     mov r1, r7
@@ -474,42 +458,36 @@ jogo:
     loadn r0, #1
     mul r0, r0, r2
     loadn r1, #string_loss
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #5
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #15
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #16
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #18
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #28
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
 
     mov r1, r7
@@ -535,42 +513,36 @@ jogo:
     loadn r0, #1
     mul r0, r0, r2
     loadn r1, #string_tie
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #5
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #15
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #16
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #18
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     loadn r0, #28
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
 
     mov r1, r7
@@ -718,37 +690,31 @@ imprimecarta:
     mul r2, r1, r2    ; comeco da linha
     add r0, r0, r2    ; comeco da linha+coluna
     loadn r1, #carta
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r0, r0, r2
     loadn r2, #5
     add r1, r1, r2
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r0, r0, r2
     loadn r2, #5
     add r1, r1, r2
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r0, r0, r2
     loadn r2, #5
     add r1, r1, r2
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r0, r0, r2
     loadn r2, #5
     add r1, r1, r2
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r0, r0, r2
     loadn r2, #5
     add r1, r1, r2
-    loadn r2, #0
     call ImprimeStr
  pop r3
  pop r2
@@ -895,7 +861,7 @@ viracarta:
     loadn r2, #0
     call ImprimeStr
     viracarta_pergunta:
-        call input_;retorna r2
+        call input_
 
         loadn r3,#1
         loadn r1, #'u'
@@ -981,7 +947,7 @@ rts
 jackblack: string      "JACKBLACK"
 telainicial1:
 string "                BLACKJACK               "
-;SPLASH:
+
 string "         CASSINO 100% LEGALIZADO        "
 
 string "         A###  J###  Q###  K###         "
@@ -1000,63 +966,54 @@ telainicial:
     loadn r0, #4    ;numero da linha
     mul r0, r0, r2
     loadn r1, #telainicial1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #8    ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #16   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #17   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #18   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #19   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #20   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #21   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #25   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
 pop r0
 pop r1
@@ -1082,21 +1039,18 @@ tela_jogo:
     loadn r1, #telajogo1
     loadn r0, #1
     mul r0, r0, r2
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r1, r1, r2
     loadn r0, #14
     mul r0, r0, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
     loadn r2, #40
     add r1, r1, r2
     loadn r0, #28
     mul r0, r0, r2
     inc r1
-    loadn r2, #0
     call ImprimeStr
  pop r0
  pop r1
@@ -1132,6 +1086,8 @@ string  "             ______________             "
 string  "            |              *            "
 string  "            |      ---     *            "
 string  "            |______________*            "
+string  "             ESC - CANCELAR             "
+string  "           ENTER - CONFIRMAR            "
 telabet:
  push r0
  push r1
@@ -1140,42 +1096,48 @@ telabet:
     loadn r0, #0    ;numero da linha
     mul r0, r0, r2
     loadn r1, #telabet1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #1    ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #7    ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #8    ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #9    ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
     call ImprimeStr
     loadn r2, #40
     loadn r0, #10   ;numero da linha
     mul r0, r0, r2
     add r1, r1, r2
     inc r1
-    loadn r2, #0    ;cor
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #14   ;numero da linha
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
+    call ImprimeStr
+    loadn r2, #40
+    loadn r0, #18   ;numero da linha
+    mul r0, r0, r2
+    add r1, r1, r2
+    inc r1
     call ImprimeStr
 pop r2
 pop r1
